@@ -1,9 +1,92 @@
-﻿  <h1>Estoque</h1>
-    <div class="consulta-id"><label>Consultar produto pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label><button (click)="consultarEstoque()" [disabled]="!consultaId">Consultar</button></div>
-    <article class="detalhe" *ngIf="estoqueDetalhe"><h2>#{{estoqueDetalhe.idItem}} {{estoqueDetalhe.item}}</h2>
-      <p>{{estoqueDetalhe.descricaoItem}} · {{estoqueDetalhe.categoria}}</p>
-      <p>Custo {{estoqueDetalhe.preco | currency:'BRL'}} · Venda {{estoqueDetalhe.precoVenda | currency:'BRL'}} · {{estoqueDetalhe.quantidadeEstoque}} {{estoqueDetalhe.unidade}} disponíveis</p></article>
-    <p class="vazio" *ngIf="!estoques.length">Nenhum produto no estoque.</p>
-    <div class="linha" *ngFor="let e of estoques"><span><strong>#{{e.idItem}} {{e.item}}</strong><small>{{e.descricaoItem}} · {{e.categoria}} · {{e.ativoProdutoServico === 'S' ? 'Ativo' : 'Inativo'}}</small></span>
-      <span>Custo {{e.preco | currency:'BRL'}}<br>Venda {{e.precoVenda | currency:'BRL'}}</span><strong>{{e.quantidadeEstoque}} {{e.unidade}}</strong></div>
-  
+<header class="titulo-pagina">
+  <h1>Consulta de estoque</h1>
+  <p>Confira os preços, a disponibilidade e a situação dos produtos.</p>
+</header>
+<div class="consulta-id">
+  <label>
+    Consultar produto pelo ID
+    <input
+      type="number"
+      min="1"
+      [(ngModel)]="consultaId"
+    />
+  </label>
+  <button
+    type="button"
+    (click)="consultarEstoque()"
+    [disabled]="!consultaId"
+  >
+    Consultar
+  </button>
+</div>
+<article
+  class="detalhe"
+  *ngIf="estoqueDetalhe"
+>
+  <h2>#{{ estoqueDetalhe.idItem }} {{ estoqueDetalhe.item }}</h2>
+  <p>{{ estoqueDetalhe.descricaoItem }} · {{ estoqueDetalhe.categoria }}</p>
+  <p>
+    Custo {{ estoqueDetalhe.preco | currency: 'BRL' }} · Venda
+    {{ estoqueDetalhe.precoVenda | currency: 'BRL' }} · {{ estoqueDetalhe.quantidadeEstoque }}
+    {{ estoqueDetalhe.unidade }} disponíveis
+  </p>
+</article>
+<p
+  class="vazio"
+  *ngIf="!estoques.length"
+>
+  Nenhum produto no estoque.
+</p>
+<div
+  class="tabela-container"
+  *ngIf="estoques.length"
+>
+  <table>
+    <caption class="sr-only">Produtos cadastrados no estoque</caption>
+    <thead>
+      <tr>
+        <th scope="col">Produto</th>
+        <th scope="col">Categoria</th>
+        <th
+          scope="col"
+          class="numero"
+        >
+          Custo
+        </th>
+        <th
+          scope="col"
+          class="numero"
+        >
+          Venda
+        </th>
+        <th
+          scope="col"
+          class="numero"
+        >
+          Estoque
+        </th>
+        <th scope="col">Situação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of estoques">
+        <td>
+          <strong>#{{ e.idItem }} {{ e.item }}</strong>
+          <small class="descricao-tabela">{{ e.descricaoItem }}</small>
+        </td>
+        <td>{{ e.categoria }}</td>
+        <td class="numero">{{ e.preco | currency: 'BRL' }}</td>
+        <td class="numero">{{ e.precoVenda | currency: 'BRL' }}</td>
+        <td class="numero">{{ e.quantidadeEstoque }} {{ e.unidade }}</td>
+        <td>
+          <span
+            class="status"
+            [attr.data-status]="e.ativoProdutoServico"
+          >
+            {{ e.ativoProdutoServico === 'S' ? 'Ativo' : 'Inativo' }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

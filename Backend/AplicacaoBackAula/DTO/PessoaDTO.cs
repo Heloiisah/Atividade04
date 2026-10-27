@@ -1,4 +1,4 @@
-﻿namespace AplicacaoBackAula.DTO
+namespace AplicacaoBackAula.DTO
 {
     public class PessoaDTO
     {
@@ -14,6 +14,3 @@
         public List<EnderecoDTO> Enderecos { get; set; } = new();
     }
 }
-
-
-

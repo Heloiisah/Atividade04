@@ -25,7 +25,10 @@ export interface Funcionario {
   pessoa: Pessoa;
 }
 
-export interface Categoria { idcategoria: number; categoria: string; }
+export interface Categoria {
+  idcategoria: number;
+  categoria: string;
+}
 
 export interface Produto {
   idItem: number;
@@ -113,5 +116,14 @@ export interface Identificacao {
   email: string;
 }
 
-export interface CarrinhoItem { item: CatalogoItem; quantidade: number; idFuncionario: number; }
+export interface CarrinhoItem {
+  item: CatalogoItem;
+  quantidade: number;
+  idFuncionario: number;
+}
 
+export interface PedidoCompraItem {
+  idItem: number;
+  idFuncionario: number;
+  quantidade: number;
+}

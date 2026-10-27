@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AplicacaoBackAula.Models;
 using AplicacaoBackAula.DTO;
@@ -82,7 +82,9 @@ namespace AplicacaoBackAula.Controllers
                 string.IsNullOrWhiteSpace(dados.DescricaoItem) || dados.PrecoItem <= 0 ||
                 dados.CodigoPreco < 1 || dados.CodigoPreco > 3 ||
                 string.IsNullOrWhiteSpace(dados.Unidade))
+            {
                 return BadRequest("Dados do produto incompletos.");
+            }
 
             // VERIFICA SE A CATEGORIA EXISTE
             if (!_context.Categoria.Any(c => c.Idcategoria == dados.Idcategoria))
@@ -161,7 +163,9 @@ namespace AplicacaoBackAula.Controllers
                 string.IsNullOrWhiteSpace(dados.DescricaoItem) || dados.PrecoItem <= 0 ||
                 dados.CodigoPreco < 1 || dados.CodigoPreco > 3 ||
                 string.IsNullOrWhiteSpace(dados.Unidade))
+            {
                 return BadRequest("Dados do produto incompletos.");
+            }
 
             // VERIFICA SE A CATEGORIA EXISTE
             if (!_context.Categoria.Any(c => c.Idcategoria == dados.Idcategoria))
@@ -226,7 +230,10 @@ namespace AplicacaoBackAula.Controllers
             var item = await _context.Items.FirstOrDefaultAsync(i =>
                 i.Iditem == id && i.TipoItem == "P");
             if (item == null)
+            {
                 return NotFound(new { mensagem = "Produto não encontrado." });
+            }
+
             item.AtivoProdutoServico = "N";
             await _context.SaveChangesAsync();
             return NoContent();
@@ -319,8 +326,16 @@ namespace AplicacaoBackAula.Controllers
 
         private static decimal CalcularPreco(int codigo, decimal custo)
         {
-            if (codigo == 1) return Math.Round(custo * 1.04m, 2, MidpointRounding.AwayFromZero);
-            if (codigo == 2) return Math.Round(custo * 1.08m, 2, MidpointRounding.AwayFromZero);
+            if (codigo == 1)
+            {
+                return Math.Round(custo * 1.04m, 2, MidpointRounding.AwayFromZero);
+            }
+
+            if (codigo == 2)
+            {
+                return Math.Round(custo * 1.08m, 2, MidpointRounding.AwayFromZero);
+            }
+
             return Math.Round(custo * 1.10m, 2, MidpointRounding.AwayFromZero);
         }
     }

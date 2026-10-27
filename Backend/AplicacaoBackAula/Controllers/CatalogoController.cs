@@ -23,13 +23,24 @@ namespace AplicacaoBackAula.Controllers
         {
             var consulta = _context.Items.AsQueryable();
             if (!string.IsNullOrWhiteSpace(nome))
+            {
                 consulta = consulta.Where(i => i.Item1.Contains(nome));
+            }
+
             if (categoria.HasValue)
+            {
                 consulta = consulta.Where(i => i.Idcategoria == categoria.Value);
+            }
+
             if (tipo == "P" || tipo == "S")
+            {
                 consulta = consulta.Where(i => i.TipoItem == tipo);
+            }
+
             if (ativos)
+            {
                 consulta = consulta.Where(i => i.AtivoProdutoServico == "S");
+            }
 
             var itens = await Projetar(consulta).OrderBy(i => i.Item).ToListAsync();
             return Ok(itens);
@@ -42,12 +53,16 @@ namespace AplicacaoBackAula.Controllers
             var item = await Projetar(_context.Items.Where(i => i.Iditem == id))
                 .FirstOrDefaultAsync();
             if (item == null)
+            {
                 return NotFound(new { mensagem = "Item não encontrado." });
+            }
+
             return Ok(item);
         }
 
-        private static IQueryable<CatalogoDTO> Projetar(IQueryable<Item> consulta) =>
-            consulta.Select(i => new CatalogoDTO
+        private static IQueryable<CatalogoDTO> Projetar(IQueryable<Item> consulta)
+        {
+            return consulta.Select(i => new CatalogoDTO
             {
                 IdItem = i.Iditem,
                 IdCategoria = i.Idcategoria,
@@ -61,5 +76,6 @@ namespace AplicacaoBackAula.Controllers
                 QuantidadeEstoque = i.Produto == null || i.Produto.Estoque == null
                     ? null : i.Produto.Estoque.QuantidadeEstoque
             });
+        }
     }
 }

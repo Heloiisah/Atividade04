@@ -1,4 +1,4 @@
-﻿namespace AplicacaoBackAula.DTO
+namespace AplicacaoBackAula.DTO
 {
     public class EntradaProdutoDTO
     {

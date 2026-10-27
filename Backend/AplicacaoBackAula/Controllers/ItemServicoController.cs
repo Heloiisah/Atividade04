@@ -1,4 +1,4 @@
-﻿using AplicacaoBackAula.DTO;
+using AplicacaoBackAula.DTO;
 using AplicacaoBackAula.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -70,7 +70,9 @@ namespace AplicacaoBackAula.Controllers
         {
             if (dados.TipoItem != "S" || string.IsNullOrWhiteSpace(dados.Item) ||
                 string.IsNullOrWhiteSpace(dados.DescricaoItem) || dados.Preco <= 0)
+            {
                 return BadRequest("Dados do serviço incompletos.");
+            }
 
             // VERIFICA SE A CATEGORIA EXISTE
             if (!_context.Categoria.Any(c => c.Idcategoria == dados.IdCategoria))
@@ -108,7 +110,9 @@ namespace AplicacaoBackAula.Controllers
         {
             if (dados.TipoItem != "S" || string.IsNullOrWhiteSpace(dados.Item) ||
                 string.IsNullOrWhiteSpace(dados.DescricaoItem) || dados.Preco <= 0)
+            {
                 return BadRequest("Dados do serviço incompletos.");
+            }
 
             // VERIFICA SE O ITEM EXISTE NO BANCO DE DADOS
             var item = await _context.Items
@@ -154,7 +158,10 @@ namespace AplicacaoBackAula.Controllers
             var item = await _context.Items.FirstOrDefaultAsync(i =>
                 i.Iditem == id && i.TipoItem == "S");
             if (item == null)
+            {
                 return NotFound();
+            }
+
             item.AtivoProdutoServico = "N";
             await _context.SaveChangesAsync();
             return NoContent();

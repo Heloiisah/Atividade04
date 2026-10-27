@@ -1,27 +1,160 @@
-﻿    <h1>{{!administracao ? 'Meus pedidos' : 'Pedidos'}}</h1>
-    <form class="formulario" #formIdent="ngForm" *ngIf="!administracao" (ngSubmit)="identificar()">
-      <p>Informe seus dados para consultar apenas seus pedidos.</p>
-      <div class="campos"><label>ID do cliente <input name="id" type="number" min="1" [(ngModel)]="identidade.idPessoa" required></label>
-        <label>CPF <input name="cpf" type="number" [(ngModel)]="identidade.cpf" required></label>
-        <label>Telefone <input name="telefone" type="number" [(ngModel)]="identidade.telefone" required></label>
-        <label>E-mail <input name="email" type="email" [(ngModel)]="identidade.email" required></label></div>
-      <button [disabled]="formIdent.invalid">Consultar meus pedidos</button></form>
-    <div class="filtros" *ngIf="administracao"><label>Situação <select [(ngModel)]="filtroStatus" (change)="filtrarPedidos()">
-      <option value="">Todas</option><option value="A">Aberto</option><option value="P">Em processamento</option>
-      <option value="C">Concluído</option><option value="X">Cancelado</option></select></label>
-      <label>ID do pedido <input type="number" min="1" [(ngModel)]="consultaId"></label>
-      <button (click)="verPedido(consultaId)" [disabled]="!consultaId">Consultar</button></div>
-    <p class="vazio" *ngIf="!pedidos.length">Nenhum pedido para mostrar.</p>
-    <div class="linha" *ngFor="let p of pedidos"><span><strong>Pedido #{{p.idAtendimento}}</strong>
-      <small>{{p.dataAtendimento}} · {{p.nomePessoa}} · {{nomeStatus(p.statusAtendimento)}}</small></span>
-      <strong>{{p.valorTotal | currency:'BRL'}}</strong><button class="botao-leve" (click)="verPedido(p.idAtendimento)">Ver detalhes</button></div>
-    <section class="detalhe secao" *ngIf="detalhe"><h2>Pedido #{{detalhe.idAtendimento}}</h2>
-      <p>Cliente #{{detalhe.idPessoa}} {{detalhe.nomePessoa}} · {{detalhe.dataAtendimento}} · {{nomeStatus(detalhe.statusAtendimento)}}</p>
-      <div class="linha" *ngFor="let i of detalhe.itens"><span><strong>{{i.item}} × {{i.quantidadeItens}}</strong>
-        <small>{{i.nomeFuncionario}} · {{i.cargo}}</small></span><span>{{i.valorUnitarioEntrada | currency:'BRL'}} / unidade</span>
-        <strong>{{i.valorUnitarioEntrada * i.quantidadeItens | currency:'BRL'}}</strong></div>
-      <p class="total">Total {{detalhe.valorTotal | currency:'BRL'}}</p>
-      <div class="acoes" *ngIf="administracao"><button *ngIf="detalhe.statusAtendimento === 'A'" (click)="mudarStatus(detalhe.idAtendimento,'P')">Iniciar processamento</button>
-        <button *ngIf="detalhe.statusAtendimento === 'P'" (click)="mudarStatus(detalhe.idAtendimento,'C')">Concluir pedido</button>
-        <button class="botao-leve" *ngIf="detalhe.statusAtendimento === 'A' || detalhe.statusAtendimento === 'P'" (click)="mudarStatus(detalhe.idAtendimento,'X')">Cancelar pedido</button></div>
-    </section>
+<header class="titulo-pagina">
+  <h1>{{ !administracao ? 'Meus pedidos' : 'Pedidos' }}</h1>
+  <p>
+    {{
+      administracao
+        ? 'Consulte os pedidos e acompanhe a situação dos atendimentos.'
+        : 'Identifique-se para consultar o histórico e os detalhes dos seus pedidos.'
+    }}
+  </p>
+</header>
+<form
+  class="formulario"
+  #formIdent="ngForm"
+  *ngIf="!administracao"
+  (ngSubmit)="identificar()"
+>
+  <p>Informe seus dados para consultar apenas seus pedidos.</p>
+  <div class="campos">
+    <label>
+      ID do cliente
+      <input
+        name="id"
+        type="number"
+        min="1"
+        [(ngModel)]="identidade.idPessoa"
+        required
+      />
+    </label>
+    <label>
+      CPF
+      <input
+        name="cpf"
+        type="number"
+        [(ngModel)]="identidade.cpf"
+        required
+      />
+    </label>
+    <label>
+      Telefone
+      <input
+        name="telefone"
+        type="number"
+        [(ngModel)]="identidade.telefone"
+        required
+      />
+    </label>
+    <label>
+      E-mail
+      <input
+        name="email"
+        type="email"
+        [(ngModel)]="identidade.email"
+        required
+      />
+    </label>
+  </div>
+  <button [disabled]="formIdent.invalid">Consultar meus pedidos</button>
+</form>
+<div
+  class="filtros"
+  *ngIf="administracao"
+>
+  <label>
+    Situação
+    <select
+      [(ngModel)]="filtroStatus"
+      (change)="filtrarPedidos()"
+    >
+      <option value="">Todas</option>
+      <option value="A">Aberto</option>
+      <option value="P">Em processamento</option>
+      <option value="C">Concluído</option>
+      <option value="X">Cancelado</option>
+    </select>
+  </label>
+  <label>
+    ID do pedido
+    <input
+      type="number"
+      min="1"
+      [(ngModel)]="consultaId"
+    />
+  </label>
+  <button
+    (click)="verPedido(consultaId)"
+    [disabled]="!consultaId"
+  >
+    Consultar
+  </button>
+</div>
+<p
+  class="vazio"
+  *ngIf="!pedidos.length"
+>
+  Nenhum pedido para mostrar.
+</p>
+<div
+  class="linha"
+  *ngFor="let p of pedidos"
+>
+  <span>
+    <strong>Pedido #{{ p.idAtendimento }}</strong>
+    <small>
+      {{ p.dataAtendimento }} · {{ p.nomePessoa }} · {{ nomeStatus(p.statusAtendimento) }}
+    </small>
+  </span>
+  <strong>{{ p.valorTotal | currency: 'BRL' }}</strong>
+  <button
+    class="botao-leve"
+    (click)="verPedido(p.idAtendimento)"
+  >
+    Ver detalhes
+  </button>
+</div>
+<section
+  class="detalhe secao"
+  *ngIf="detalhe"
+>
+  <h2>Pedido #{{ detalhe.idAtendimento }}</h2>
+  <p>
+    Cliente #{{ detalhe.idPessoa }} {{ detalhe.nomePessoa }} · {{ detalhe.dataAtendimento }} ·
+    {{ nomeStatus(detalhe.statusAtendimento) }}
+  </p>
+  <div
+    class="linha"
+    *ngFor="let i of detalhe.itens"
+  >
+    <span>
+      <strong>{{ i.item }} × {{ i.quantidadeItens }}</strong>
+      <small>{{ i.nomeFuncionario }} · {{ i.cargo }}</small>
+    </span>
+    <span>{{ i.valorUnitarioEntrada | currency: 'BRL' }} / unidade</span>
+    <strong>{{ i.valorUnitarioEntrada * i.quantidadeItens | currency: 'BRL' }}</strong>
+  </div>
+  <p class="total">Total {{ detalhe.valorTotal | currency: 'BRL' }}</p>
+  <div
+    class="acoes"
+    *ngIf="administracao"
+  >
+    <button
+      *ngIf="detalhe.statusAtendimento === 'A'"
+      (click)="mudarStatus(detalhe.idAtendimento, 'P')"
+    >
+      Iniciar processamento
+    </button>
+    <button
+      *ngIf="detalhe.statusAtendimento === 'P'"
+      (click)="mudarStatus(detalhe.idAtendimento, 'C')"
+    >
+      Concluir pedido
+    </button>
+    <button
+      class="botao-leve"
+      *ngIf="detalhe.statusAtendimento === 'A' || detalhe.statusAtendimento === 'P'"
+      (click)="mudarStatus(detalhe.idAtendimento, 'X')"
+    >
+      Cancelar pedido
+    </button>
+  </div>
+</section>

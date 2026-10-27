@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
@@ -7,7 +7,9 @@ import { AvisoService } from '../servicos/aviso.service';
 import { Categoria, Produto } from '../modelos/modelos';
 
 @Component({
-  selector: 'app-produtos', standalone: true, imports: [CommonModule, FormsModule],
+  selector: 'app-produtos',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './produtos.component.html'
 })
 export class ProdutosComponent implements OnInit {
@@ -16,20 +18,41 @@ export class ProdutosComponent implements OnInit {
   produtos: Produto[] = [];
   produtoForm = this.novoProduto();
 
-  constructor(private api: ApiService, private aviso: AvisoService) {}
+  constructor(
+    private api: ApiService,
+    private aviso: AvisoService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     try {
       this.produtos = await firstValueFrom(this.api.produtos());
       this.categorias = await firstValueFrom(this.api.categorias());
-    } catch (erro) { this.aviso.mostrarErro(erro); }
+    } catch (erro) {
+      this.aviso.mostrarErro(erro);
+    }
   }
 
-  editarProduto(p: Produto): void { this.produtoForm = { ...p }; }
+  editarProduto(p: Produto): void {
+    this.produtoForm = {
+      idItem: p.idItem,
+      idcategoria: p.idcategoria,
+      item: p.item,
+      descricaoItem: p.descricaoItem,
+      precoItem: p.precoItem,
+      tipoItem: p.tipoItem,
+      ativoProdutoServico: p.ativoProdutoServico,
+      codigoPreco: p.codigoPreco,
+      precoVenda: p.precoVenda,
+      unidade: p.unidade
+    };
+  }
 
   async consultarProduto(): Promise<void> {
-    try { this.produtoForm = await firstValueFrom(this.api.produto(this.consultaId)); }
-    catch (erro) { this.aviso.mostrarErro(erro); }
+    try {
+      this.produtoForm = await firstValueFrom(this.api.produto(this.consultaId));
+    } catch (erro) {
+      this.aviso.mostrarErro(erro);
+    }
   }
 
   async salvarProduto(): Promise<void> {
@@ -38,7 +61,9 @@ export class ProdutosComponent implements OnInit {
       this.produtoForm = this.novoProduto();
       this.produtos = await firstValueFrom(this.api.produtos());
       this.aviso.avisar('Produto salvo.');
-    } catch (erro) { this.aviso.mostrarErro(erro); }
+    } catch (erro) {
+      this.aviso.mostrarErro(erro);
+    }
   }
 
   async desativarProduto(id: number): Promise<void> {
@@ -46,12 +71,23 @@ export class ProdutosComponent implements OnInit {
       await firstValueFrom(this.api.desativarProduto(id));
       this.produtos = await firstValueFrom(this.api.produtos());
       this.aviso.avisar('Produto desativado.');
-    } catch (erro) { this.aviso.mostrarErro(erro); }
+    } catch (erro) {
+      this.aviso.mostrarErro(erro);
+    }
   }
 
   novoProduto(): Produto {
-    return { idItem: 0, idcategoria: 0, item: '', descricaoItem: '', precoItem: 0,
-      tipoItem: 'P', ativoProdutoServico: 'S', codigoPreco: 1, precoVenda: 0, unidade: 'UN' };
+    return {
+      idItem: 0,
+      idcategoria: 0,
+      item: '',
+      descricaoItem: '',
+      precoItem: 0,
+      tipoItem: 'P',
+      ativoProdutoServico: 'S',
+      codigoPreco: 1,
+      precoVenda: 0,
+      unidade: 'UN'
+    };
   }
 }
-

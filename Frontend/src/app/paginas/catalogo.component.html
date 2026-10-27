@@ -1,18 +1,160 @@
-﻿    <section class="abertura"><div><h1>Seu cuidado, no seu tempo.</h1>
-      <p>Escolha um tratamento ou encontre produtos para continuar o cuidado em casa.</p></div>
-      <div class="marca-grafica" aria-hidden="true"><span></span><span></span><span></span></div></section>
-    <section class="filtros" aria-label="Buscar no catálogo">
-      <label>Pesquisar pelo nome <input [(ngModel)]="busca" (keyup.enter)="carregarCatalogo()" placeholder="Ex.: limpeza de pele"></label>
-      <label>Categoria <select [(ngModel)]="filtroCategoria" (change)="carregarCatalogo()"><option [ngValue]="0">Todas</option>
-        <option *ngFor="let c of categorias" [ngValue]="c.idcategoria">{{c.categoria}}</option></select></label>
-      <label>Tipo <select [(ngModel)]="filtroTipo" (change)="carregarCatalogo()"><option value="">Todos</option>
-        <option value="P">Produtos</option><option value="S">Serviços</option></select></label>
-      <button type="button" (click)="carregarCatalogo()">Buscar</button>
-    </section>
-    <div class="consulta-id"><label>Consultar item pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label>
-      <button type="button" class="botao-leve" (click)="consultarCatalogo(consultaId)" [disabled]="!consultaId">Consultar</button></div>
-    <article class="detalhe" *ngIf="itemDetalhe"><h2>{{itemDetalhe.item}}</h2><p>{{itemDetalhe.descricaoItem}}</p>
-      <p>{{itemDetalhe.categoria}} · {{itemDetalhe.tipoItem === 'P' ? 'Produto' : 'Serviço'}} · {{itemDetalhe.preco | currency:'BRL'}}</p>
-      <button type="button" (click)="adicionar(itemDetalhe)">Adicionar ao carrinho</button></article>
-    <p class="vazio" *ngIf="!itens.length && !carregando">Nenhum item encontrado. Tente outro filtro.</p>
-    <div class="grade-itens"><app-item-card *ngFor="let item of itens" [item]="item" (adicionar)="adicionar($event)"></app-item-card></div>
+<nav
+  class="categorias-nav"
+  aria-label="Filtrar catálogo por categoria"
+>
+  <button
+    type="button"
+    [class.selecionado]="filtroCategoria === 0"
+    [attr.aria-pressed]="filtroCategoria === 0"
+    (click)="selecionarCategoria(0)"
+  >
+    Todas as categorias
+  </button>
+  <button
+    type="button"
+    *ngFor="let c of categorias"
+    [class.selecionado]="filtroCategoria === c.idcategoria"
+    [attr.aria-pressed]="filtroCategoria === c.idcategoria"
+    (click)="selecionarCategoria(c.idcategoria)"
+  >
+    {{ c.categoria }}
+  </button>
+</nav>
+
+<section
+  class="catalogo-busca"
+  aria-label="Buscar no catálogo"
+>
+  <div class="catalogo-apresentacao">
+    <div>
+      <h1>Produtos e serviços</h1>
+      <p>Encontre seu próximo cuidado.</p>
+    </div>
+    <app-icone nome="folha"></app-icone>
+  </div>
+  <form
+    class="busca-catalogo"
+    (ngSubmit)="carregarCatalogo()"
+  >
+    <label class="busca-nome">
+      O que você procura?
+      <input
+        name="busca"
+        [(ngModel)]="busca"
+        placeholder="Pesquise um produto ou serviço"
+      />
+    </label>
+    <label>
+      Tipo
+      <select
+        name="tipo"
+        [(ngModel)]="filtroTipo"
+        (change)="carregarCatalogo()"
+      >
+        <option value="">Produtos e serviços</option>
+        <option value="P">Produtos</option>
+        <option value="S">Serviços</option>
+      </select>
+    </label>
+    <button type="submit">
+      <app-icone nome="buscar"></app-icone>
+      Buscar
+    </button>
+  </form>
+</section>
+
+<div class="catalogo-toolbar">
+  <p aria-live="polite">
+    {{
+      carregando
+        ? 'Carregando catálogo…'
+        : itens.length + (itens.length === 1 ? ' item encontrado' : ' itens encontrados')
+    }}
+  </p>
+  <details class="consulta-rapida">
+    <summary>Consultar por ID</summary>
+    <div class="consulta-id">
+      <label>
+        ID do item
+        <input
+          type="number"
+          min="1"
+          [(ngModel)]="consultaId"
+          (keyup.enter)="consultarCatalogo(consultaId)"
+        />
+      </label>
+      <button
+        type="button"
+        (click)="consultarCatalogo(consultaId)"
+        [disabled]="!consultaId"
+      >
+        Consultar
+      </button>
+    </div>
+  </details>
+</div>
+
+<article
+  class="detalhe detalhe-item"
+  id="detalhes-item"
+  tabindex="-1"
+  *ngIf="itemDetalhe"
+>
+  <button
+    class="fechar-detalhe botao-leve"
+    type="button"
+    (click)="itemDetalhe = undefined"
+    aria-label="Fechar detalhes"
+  >
+    <app-icone nome="fechar"></app-icone>
+  </button>
+  <span class="tipo">
+    {{ itemDetalhe.tipoItem === 'P' ? 'Produto' : 'Serviço' }} · {{ itemDetalhe.categoria }} · #{{
+      itemDetalhe.idItem
+    }}
+  </span>
+  <h2>{{ itemDetalhe.item }}</h2>
+  <p>{{ itemDetalhe.descricaoItem }}</p>
+  <p class="valor-destaque">{{ itemDetalhe.preco | currency: 'BRL' }}</p>
+  <p *ngIf="itemDetalhe.tipoItem === 'P'">
+    {{ itemDetalhe.quantidadeEstoque || 0 }} unidades disponíveis
+  </p>
+  <button
+    type="button"
+    (click)="adicionar(itemDetalhe)"
+    [disabled]="itemDetalhe.tipoItem === 'P' && !itemDetalhe.quantidadeEstoque"
+  >
+    <app-icone nome="carrinho"></app-icone>
+    Adicionar ao carrinho
+  </button>
+</article>
+
+<div
+  class="vazio"
+  *ngIf="!itens.length && !carregando"
+>
+  <app-icone nome="buscar"></app-icone>
+  <h2>Nenhum item encontrado</h2>
+  <p>Tente outro nome, tipo ou categoria.</p>
+  <button
+    type="button"
+    class="botao-leve"
+    (click)="limparFiltros()"
+  >
+    Limpar filtros
+  </button>
+</div>
+<div
+  class="grade-itens"
+  [attr.aria-busy]="carregando"
+>
+  <app-item-card
+    *ngFor="let item of itens"
+    [item]="item"
+    (adicionar)="adicionar($event)"
+    (detalhar)="consultarCatalogo($event)"
+  ></app-item-card>
+</div>
+<p class="nota-catalogo">
+  As imagens são ilustrativas. Consulte a descrição de cada produto ou serviço.
+</p>

@@ -1,4 +1,4 @@
-﻿using AplicacaoBackAula.Models;
+using AplicacaoBackAula.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -100,7 +100,9 @@ namespace AplicacaoBackAula.Controllers
             }
 
             if (await _context.Items.AnyAsync(i => i.Idcategoria == id))
+            {
                 return Conflict(new { mensagem = "Categoria vinculada a produtos ou serviços." });
+            }
 
             _context.Categoria.Remove(categoria);
 

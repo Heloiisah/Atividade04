@@ -1,4 +1,4 @@
-﻿using AplicacaoBackAula.DTO;
+using AplicacaoBackAula.DTO;
 using AplicacaoBackAula.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -109,11 +109,15 @@ namespace AplicacaoBackAula.Controllers
                 string.IsNullOrWhiteSpace(dto.Pessoa.Email) || !dto.Pessoa.Email.Contains('@') ||
                 string.IsNullOrWhiteSpace(dto.Cargo) || dto.DataAdmissao == default ||
                 dto.Pessoa.Enderecos.Count == 0)
+            {
                 return BadRequest("Dados do funcionário incompletos.");
+            }
 
             if (await _context.Pessoas.AnyAsync(p => p.Cpf == dto.Pessoa.CPF ||
                 p.Email == dto.Pessoa.Email))
+            {
                 return BadRequest("CPF ou e-mail já cadastrado.");
+            }
 
             // PERCORRE OS ENDEREÇOS RECEBIDOS PELO CLIENTE
             foreach (var endereco in dto.Pessoa.Enderecos)
@@ -220,7 +224,9 @@ namespace AplicacaoBackAula.Controllers
                 string.IsNullOrWhiteSpace(dto.Pessoa.Email) || !dto.Pessoa.Email.Contains('@') ||
                 string.IsNullOrWhiteSpace(dto.Cargo) || dto.DataAdmissao == default ||
                 dto.Pessoa.Enderecos.Count == 0)
+            {
                 return BadRequest("Dados do funcionário incompletos.");
+            }
 
             // BUSCA O FUNCIONÁRIO NO BANCO DE DADOS
             var funcionario = await _context.Funcionarios
@@ -249,7 +255,9 @@ namespace AplicacaoBackAula.Controllers
             if (await _context.Pessoas.AnyAsync(p => p.Idpessoa != id &&
                 ((verificarCpf && p.Cpf == dto.Pessoa.CPF) ||
                  (verificarEmail && p.Email == dto.Pessoa.Email))))
+            {
                 return BadRequest("CPF ou e-mail já cadastrado.");
+            }
 
             // PERCORRE OS ENDEREÇOS RECEBIDOS PELO CLIENTE
             foreach (var endereco in dto.Pessoa.Enderecos)

@@ -18,7 +18,7 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "styles": ["src/styles.css"],
-            "assets": []
+            "assets": ["src/assets"]
           }
         },
         "serve": {

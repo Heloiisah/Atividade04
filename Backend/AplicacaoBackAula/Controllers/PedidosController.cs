@@ -22,11 +22,15 @@ namespace AplicacaoBackAula.Controllers
         {
             var codigo = CodigoStatus(status);
             if (status != null && codigo == null)
+            {
                 return BadRequest(new { mensagem = "Situação inválida." });
+            }
 
             var consulta = _context.Atendimentos.AsQueryable();
             if (codigo != null)
+            {
                 consulta = consulta.Where(a => a.StatusAtendimento == codigo);
+            }
 
             var pedidos = await Projetar(consulta)
                 .OrderByDescending(a => a.IdAtendimento).ToListAsync();
@@ -40,7 +44,10 @@ namespace AplicacaoBackAula.Controllers
             var pedido = await Projetar(_context.Atendimentos
                 .Where(a => a.Idatendimento == id)).FirstOrDefaultAsync();
             if (pedido == null)
+            {
                 return NotFound(new { mensagem = "Pedido não encontrado." });
+            }
+
             return Ok(pedido);
         }
 
@@ -49,7 +56,9 @@ namespace AplicacaoBackAula.Controllers
         public async Task<ActionResult<IEnumerable<AtendimentoDTO>>> MeusPedidos(IdentificacaoClienteDTO dto)
         {
             if (!await ClienteValido(dto.IdPessoa, dto.CPF, dto.Telefone, dto.Email))
+            {
                 return BadRequest(new { mensagem = "Dados do cliente não conferem." });
+            }
 
             var pedidos = await Projetar(_context.Atendimentos
                 .Where(a => a.Idpessoa == dto.IdPessoa))
@@ -61,11 +70,17 @@ namespace AplicacaoBackAula.Controllers
         public async Task<ActionResult<AtendimentoDTO>> MeuPedido(int id, IdentificacaoClienteDTO dto)
         {
             if (!await ClienteValido(dto.IdPessoa, dto.CPF, dto.Telefone, dto.Email))
+            {
                 return BadRequest(new { mensagem = "Dados do cliente não conferem." });
+            }
+
             var pedido = await Projetar(_context.Atendimentos.Where(a =>
                 a.Idatendimento == id && a.Idpessoa == dto.IdPessoa)).FirstOrDefaultAsync();
             if (pedido == null)
+            {
                 return NotFound(new { mensagem = "Pedido não encontrado para este cliente." });
+            }
+
             return Ok(pedido);
         }
 
@@ -74,52 +89,121 @@ namespace AplicacaoBackAula.Controllers
         public async Task<ActionResult<AtendimentoDTO>> PostPedido(PedidoCompraDTO dto)
         {
             if (!await ClienteValido(dto.IdPessoa, dto.CPF, dto.Telefone, dto.Email))
+            {
                 return BadRequest(new { mensagem = "Dados do cliente não conferem." });
-            if (dto.Itens.Count == 0 || dto.Itens.Any(i => i.IdItem <= 0 ||
-                i.IdFuncionario <= 0 || i.Quantidade <= 0) ||
-                dto.Itens.Select(i => i.IdItem).Distinct().Count() != dto.Itens.Count)
+            }
+
+            if (dto.Itens.Count == 0)
+            {
                 return BadRequest(new { mensagem = "Informe itens distintos e quantidades positivas." });
+            }
 
-            var ids = dto.Itens.Select(i => i.IdItem).ToList();
-            var itens = await _context.Items
-                .Include(i => i.Produto).ThenInclude(p => p!.Estoque)
-                .Where(i => ids.Contains(i.Iditem)).ToListAsync();
-            if (itens.Count != ids.Count || itens.Any(i => i.AtivoProdutoServico != "S" ||
-                (i.TipoItem == "P" && i.Produto == null)))
-                return BadRequest(new { mensagem = "Há item inexistente ou inativo." });
-
-            var funcionarios = dto.Itens.Select(i => i.IdFuncionario).Distinct().ToList();
-            if (await _context.Funcionarios.CountAsync(f => funcionarios.Contains(f.Idpessoa) &&
-                f.IdpessoaNavigation.AtivoPessoa == "S") != funcionarios.Count)
-                return BadRequest(new { mensagem = "Funcionário inexistente ou inativo." });
+            var ids = new List<int>();
+            var funcionarios = new List<int>();
 
             foreach (var escolhido in dto.Itens)
             {
-                var item = itens.First(i => i.Iditem == escolhido.IdItem);
-                if (item.TipoItem == "P" && (item.Produto?.Estoque == null ||
-                    item.Produto.Estoque.QuantidadeEstoque < escolhido.Quantidade))
-                    return BadRequest(new { mensagem = $"Estoque insuficiente para {item.Item1}." });
+                if (escolhido.IdItem <= 0 || escolhido.IdFuncionario <= 0 || escolhido.Quantidade <= 0)
+                {
+                    return BadRequest(new { mensagem = "Informe itens distintos e quantidades positivas." });
+                }
+
+                if (ids.Contains(escolhido.IdItem))
+                {
+                    return BadRequest(new { mensagem = "Informe itens distintos e quantidades positivas." });
+                }
+
+                ids.Add(escolhido.IdItem);
+
+                if (!funcionarios.Contains(escolhido.IdFuncionario))
+                {
+                    funcionarios.Add(escolhido.IdFuncionario);
+                }
             }
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            var itens = await _context.Items
+                .Include(item => item.Produto)
+                .ThenInclude(produto => produto!.Estoque)
+                .Where(item => ids.Contains(item.Iditem))
+                .ToListAsync();
+
+            if (itens.Count != ids.Count)
+            {
+                return BadRequest(new { mensagem = "Há item inexistente ou inativo." });
+            }
+
+            foreach (var item in itens)
+            {
+                if (item.AtivoProdutoServico != "S")
+                {
+                    return BadRequest(new { mensagem = "Há item inexistente ou inativo." });
+                }
+
+                if (item.TipoItem == "P" && item.Produto == null)
+                {
+                    return BadRequest(new { mensagem = "Há item inexistente ou inativo." });
+                }
+            }
+
+            var quantidadeFuncionarios = await _context.Funcionarios.CountAsync(funcionario =>
+                funcionarios.Contains(funcionario.Idpessoa) &&
+                funcionario.IdpessoaNavigation.AtivoPessoa == "S");
+
+            if (quantidadeFuncionarios != funcionarios.Count)
+            {
+                return BadRequest(new { mensagem = "Funcionário inexistente ou inativo." });
+            }
+
             var atendimento = new Atendimento
             {
                 Idpessoa = dto.IdPessoa,
                 DataAtendimento = DateOnly.FromDateTime(DateTime.Today),
-                StatusAtendimento = "A",
-                Atendimentoitems = dto.Itens.Select(i =>
-                {
-                    var item = itens.First(x => x.Iditem == i.IdItem);
-                    return new Atendimentoitem
-                    {
-                        Iditem = i.IdItem,
-                        Idfuncionario = i.IdFuncionario,
-                        QuantidadeItens = i.Quantidade,
-                        ValorunitarioEntrada = item.TipoItem == "P"
-                            ? item.Produto!.PrecoVenda : item.Preco
-                    };
-                }).ToList()
+                StatusAtendimento = "A"
             };
+
+            foreach (var escolhido in dto.Itens)
+            {
+                Item? itemEncontrado = null;
+
+                foreach (var item in itens)
+                {
+                    if (item.Iditem == escolhido.IdItem)
+                    {
+                        itemEncontrado = item;
+                        break;
+                    }
+                }
+
+                if (itemEncontrado == null)
+                {
+                    return BadRequest(new { mensagem = "Há item inexistente ou inativo." });
+                }
+
+                var valorUnitario = itemEncontrado.Preco;
+
+                if (itemEncontrado.TipoItem == "P")
+                {
+                    var produto = itemEncontrado.Produto;
+
+                    if (produto == null || produto.Estoque == null ||
+                        produto.Estoque.QuantidadeEstoque < escolhido.Quantidade)
+                    {
+                        return BadRequest(new { mensagem = $"Estoque insuficiente para {itemEncontrado.Item1}." });
+                    }
+
+                    valorUnitario = produto.PrecoVenda;
+                }
+
+                atendimento.Atendimentoitems.Add(new Atendimentoitem
+                {
+                    Iditem = escolhido.IdItem,
+                    Idfuncionario = escolhido.IdFuncionario,
+                    QuantidadeItens = escolhido.Quantidade,
+                    ValorunitarioEntrada = valorUnitario
+                });
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
             _context.Atendimentos.Add(atendimento);
 
             try
@@ -144,30 +228,50 @@ namespace AplicacaoBackAula.Controllers
         {
             var novoStatus = CodigoStatus(dto.StatusAtendimento);
             if (novoStatus != "P" && novoStatus != "C" && novoStatus != "X")
+            {
                 return BadRequest(new { mensagem = "Situação inválida." });
+            }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             var pedido = await _context.Atendimentos
                 .Include(a => a.Atendimentoitems).ThenInclude(i => i.IditemNavigation)
                 .FirstOrDefaultAsync(a => a.Idatendimento == id);
             if (pedido == null)
+            {
                 return NotFound(new { mensagem = "Pedido não encontrado." });
+            }
 
-            var permitido = pedido.StatusAtendimento == "A" &&
-                (novoStatus == "P" || novoStatus == "X") ||
-                pedido.StatusAtendimento == "P" &&
-                (novoStatus == "C" || novoStatus == "X");
+            var permitido = false;
+
+            if (pedido.StatusAtendimento == "A")
+            {
+                permitido = novoStatus == "P" || novoStatus == "X";
+            }
+            else if (pedido.StatusAtendimento == "P")
+            {
+                permitido = novoStatus == "C" || novoStatus == "X";
+            }
             if (!permitido)
+            {
                 return BadRequest(new { mensagem = "Transição de situação não permitida." });
+            }
 
             if (novoStatus == "X")
             {
-                foreach (var item in pedido.Atendimentoitems.Where(i => i.IditemNavigation.TipoItem == "P"))
+                foreach (var item in pedido.Atendimentoitems)
                 {
+                    if (item.IditemNavigation.TipoItem != "P")
+                    {
+                        continue;
+                    }
+
                     var estoque = await _context.Estoques
                         .FirstOrDefaultAsync(e => e.Iditem == item.Iditem);
                     if (estoque == null)
+                    {
                         return BadRequest(new { mensagem = "Estoque do produto não encontrado." });
+                    }
+
                     estoque.QuantidadeEstoque += item.QuantidadeItens;
                 }
             }
@@ -196,22 +300,37 @@ namespace AplicacaoBackAula.Controllers
         private static string? CodigoStatus(string? status)
         {
             if (status == null)
+            {
                 return null;
+            }
 
             var codigo = status.Trim().ToUpperInvariant();
             if (codigo == "A" || codigo == "ABERTO")
+            {
                 return "A";
+            }
+
             if (codigo == "P" || codigo == "EM PROCESSAMENTO")
+            {
                 return "P";
+            }
+
             if (codigo == "C" || codigo == "CONCLUIDO" || codigo == "CONCLUÍDO")
+            {
                 return "C";
+            }
+
             if (codigo == "X" || codigo == "CANCELADO")
+            {
                 return "X";
+            }
+
             return null;
         }
 
-        private static IQueryable<AtendimentoDTO> Projetar(IQueryable<Atendimento> consulta) =>
-            consulta.Select(a => new AtendimentoDTO
+        private static IQueryable<AtendimentoDTO> Projetar(IQueryable<Atendimento> consulta)
+        {
+            return consulta.Select(a => new AtendimentoDTO
             {
                 IdAtendimento = a.Idatendimento,
                 IdPessoa = a.Idpessoa,
@@ -232,5 +351,6 @@ namespace AplicacaoBackAula.Controllers
                     NomeFuncionario = i.IdfuncionarioNavigation.IdpessoaNavigation.Nome
                 }).ToList()
             });
+        }
     }
 }

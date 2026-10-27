@@ -1,4 +1,4 @@
-﻿using AplicacaoBackAula.DTO;
+using AplicacaoBackAula.DTO;
 using AplicacaoBackAula.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ namespace AplicacaoBackAula.Controllers
         }
 
 
-       // LISTA ATENDIMENTOS
+        // LISTA ATENDIMENTOS
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AtendimentoDTO>>> GetAll()
         {
@@ -51,7 +51,7 @@ namespace AplicacaoBackAula.Controllers
 
             return Ok(atendimentos);
         }
-          //
+        //
         [HttpGet("{id}")]
         public async Task<ActionResult<AtendimentoDTO>> GetAtendimento(int id)
         {
@@ -120,13 +120,13 @@ namespace AplicacaoBackAula.Controllers
             };
 
 
-            //PREPARA OS DADOS PARA SEREM ENVIADOS AO BANCO DE DADOS 
+            //PREPARA OS DADOS PARA SEREM ENVIADOS AO BANCO DE DADOS
             _context.Atendimentos.Add(atendimento);
 
             //SALVA OS DADOS NO BANCO DE DADOS
             await _context.SaveChangesAsync();
 
-            //RETORNA OS DADOS QUE FORAM ENVIADOS AO BANCO DE DADOS UTILIZANDO GetAtendimento 
+            //RETORNA OS DADOS QUE FORAM ENVIADOS AO BANCO DE DADOS UTILIZANDO GetAtendimento
             return CreatedAtAction(nameof(GetAtendimento),
                 new { id = atendimento.Idatendimento }, dto);
         }
@@ -151,26 +151,47 @@ namespace AplicacaoBackAula.Controllers
 
 
             atendimento.StatusAtendimento = dto.StatusAtendimento;
-            //PEGANDO OS IDS DE IdItem e IdFuncionario DO dto PASSO PELO CLIENTE
-            var ItensRecebidos = dto.Itens
-                .Select(i => (i.IdItem, i.IdFuncionario)).ToHashSet();
+            var itensParaRemover = new List<Atendimentoitem>();
 
-            //COMPARAR OS IDS DE IdItem e IdFuncionario COM O DO BANCO DE DADOS.
-            var ItensSelecionadosRemover = atendimento.Atendimentoitems
-                .Where(i => !ItensRecebidos.Contains((i.Iditem, i.Idfuncionario))).ToList();
+            foreach (var itemAtual in atendimento.Atendimentoitems)
+            {
+                var recebido = false;
+
+                foreach (var itemDto in dto.Itens)
+                {
+                    if (itemAtual.Iditem == itemDto.IdItem &&
+                        itemAtual.Idfuncionario == itemDto.IdFuncionario)
+                    {
+                        recebido = true;
+                        break;
+                    }
+                }
+
+                if (!recebido)
+                {
+                    itensParaRemover.Add(itemAtual);
+                }
+            }
 
             //EXCLUI OS IDS QUE NÃO FORAM PASSADOS PELO CLIENTE VIA dto
-            _context.Atendimentoitems. RemoveRange(ItensSelecionadosRemover);
+            _context.Atendimentoitems.RemoveRange(itensParaRemover);
 
             //PECORRE OS ITENS DO ATENDIMENTO PASSADO PELO CLIENTE
             foreach (var itemDto in dto.Itens)
             {
 
-             //VERIFICAR A EXISTENCIA DO ITEM NO BANCO DE DADOS
-              var itemExistente = atendimento.Atendimentoitems
-                 .FirstOrDefault(i =>
-              i.Iditem == itemDto.IdItem &&
-               i.Idfuncionario == itemDto.IdFuncionario);
+                //VERIFICAR A EXISTENCIA DO ITEM NO BANCO DE DADOS
+                Atendimentoitem? itemExistente = null;
+
+                foreach (var itemAtual in atendimento.Atendimentoitems)
+                {
+                    if (itemAtual.Iditem == itemDto.IdItem &&
+                        itemAtual.Idfuncionario == itemDto.IdFuncionario)
+                    {
+                        itemExistente = itemAtual;
+                        break;
+                    }
+                }
                 //CASO ENCONTRE O ITEM ALTERA APENAS A QUANTIDADE E VALOR UNITÁRIO
                 if (itemExistente != null)
                 {
@@ -233,5 +254,4 @@ namespace AplicacaoBackAula.Controllers
             return NoContent();
         }
     }
-  }
-
+}

@@ -1,4 +1,4 @@
-﻿
+
 using AplicacaoBackAula.DTO;
 using AplicacaoBackAula.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -74,14 +74,21 @@ namespace AplicacaoBackAula.Controllers
             if (dto.IdItem <= 0 || dto.QuantidadeEntrada <= 0 ||
                 dto.ValorUnitarioEntrada <= 0 || dto.DataEntradaProduto == default ||
                 string.IsNullOrWhiteSpace(dto.Unidade))
+            {
                 return BadRequest("Informe produto, data, quantidade, unidade e valor válidos.");
+            }
 
             var produto = await _context.Produtos
                 .FirstOrDefaultAsync(p => p.Iditem == dto.IdItem);
             if (produto == null)
+            {
                 return NotFound("Produto não encontrado.");
+            }
+
             if (produto.Unidade.Trim() != dto.Unidade.Trim())
+            {
                 return BadRequest("A unidade deve ser igual à do produto.");
+            }
 
             var estoque = await _context.Estoques
                 .FirstOrDefaultAsync(e => e.Iditem == dto.IdItem);
@@ -137,7 +144,9 @@ namespace AplicacaoBackAula.Controllers
         public async Task<IActionResult> PutEntrada(int id, EntradaProdutoPutDTO dto)
         {
             if (!await _context.EntradaProdutos.AnyAsync(e => e.IdentradaProduto == id))
+            {
                 return NotFound();
+            }
             // O BANCO RECEBIDO ATUALIZA O ESTOQUE APENAS NO INSERT DA ENTRADA.
             return Conflict("Entradas registradas não podem ser alteradas. Registre uma nova entrada.");
         }
@@ -147,7 +156,9 @@ namespace AplicacaoBackAula.Controllers
         public async Task<IActionResult> DeleteEntrada(int id)
         {
             if (!await _context.EntradaProdutos.AnyAsync(e => e.IdentradaProduto == id))
+            {
                 return NotFound();
+            }
             // EXCLUIR A ENTRADA NÃO DESFAZ O TRIGGER QUE SOMOU AO ESTOQUE.
             return Conflict("Entradas registradas não podem ser excluídas.");
         }

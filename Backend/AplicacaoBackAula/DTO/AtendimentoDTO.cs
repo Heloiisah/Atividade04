@@ -1,4 +1,4 @@
-﻿namespace AplicacaoBackAula.DTO
+namespace AplicacaoBackAula.DTO
 {
     public class AtendimentoDTO
     {
@@ -10,6 +10,6 @@
         public decimal ValorTotal { get; set; }
         public List<AtendimentoItemDTO> Itens { get; set; } = new();
 
-       
+
     }
 }

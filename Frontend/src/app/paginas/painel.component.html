@@ -1,6 +1,81 @@
-﻿  <h1>Resumo da administração</h1>
-    <div class="indicadores"><div><span>Clientes</span><strong>{{pessoas.length}}</strong></div>
-      <div><span>Produtos</span><strong>{{produtos.length}}</strong></div>
-      <div><span>Serviços</span><strong>{{servicos.length}}</strong></div>
-      <div><span>Pedidos abertos</span><strong>{{pedidosAbertos}}</strong></div>
-      <div><span>Produtos no estoque</span><strong>{{estoques.length}}</strong></div></div>
+<header class="titulo-pagina">
+  <h1>Visão geral</h1>
+  <p>Acompanhe os cadastros, os pedidos e o estoque da sua loja.</p>
+</header>
+<div class="indicadores">
+  <div>
+    <span>Clientes</span>
+    <strong>{{ pessoas.length }}</strong>
+    <small>Clientes cadastrados</small>
+  </div>
+  <div>
+    <span>Produtos</span>
+    <strong>{{ produtos.length }}</strong>
+    <small>No catálogo da loja</small>
+  </div>
+  <div>
+    <span>Serviços</span>
+    <strong>{{ servicos.length }}</strong>
+    <small>Tratamentos cadastrados</small>
+  </div>
+  <div>
+    <span>Pedidos abertos</span>
+    <strong>{{ pedidosAbertos }}</strong>
+    <small>Aguardando atendimento</small>
+  </div>
+  <div>
+    <span>Produtos no estoque</span>
+    <strong>{{ estoques.length }}</strong>
+    <small>Itens acompanhados</small>
+  </div>
+</div>
+<section class="secao painel-pedidos">
+  <div class="lista-titulo">
+    <h2>Pedidos registrados</h2>
+    <span>{{ pedidos.length }} no total</span>
+  </div>
+  <p
+    class="vazio"
+    *ngIf="!pedidos.length"
+  >
+    Nenhum pedido registrado.
+  </p>
+  <div
+    class="tabela-container"
+    *ngIf="pedidos.length"
+  >
+    <table>
+      <caption class="sr-only">Resumo dos pedidos registrados</caption>
+      <thead>
+        <tr>
+          <th scope="col">Pedido</th>
+          <th scope="col">Cliente</th>
+          <th scope="col">Data</th>
+          <th scope="col">Situação</th>
+          <th
+            scope="col"
+            class="numero"
+          >
+            Total
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of pedidos">
+          <td>#{{ p.idAtendimento }}</td>
+          <td>{{ p.nomePessoa }}</td>
+          <td>{{ p.dataAtendimento | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <span
+              class="status"
+              [attr.data-status]="p.statusAtendimento"
+            >
+              {{ nomeStatus(p.statusAtendimento) }}
+            </span>
+          </td>
+          <td class="numero">{{ p.valorTotal | currency: 'BRL' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

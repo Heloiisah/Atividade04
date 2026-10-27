@@ -1,41 +1,192 @@
-﻿<header class="site-header">
+<a
+  class="pular-conteudo"
+  href="#conteudo"
+>
+  Ir para o conteúdo
+</a>
+<header class="site-header">
   <div class="header-inner">
-    <button class="brand" type="button" (click)="abrir('catalogo')">Estética <span>&</span> Bem-Estar</button>
-    <nav aria-label="Loja">
-      <button type="button" (click)="abrir('catalogo')">Catálogo</button>
-      <button type="button" (click)="abrir('cliente')">Cadastro</button>
-      <button type="button" (click)="abrir('carrinho')">Carrinho ({{carrinho.itens.length}})</button>
-      <button type="button" (click)="abrir('meus')">Meus pedidos</button>
-      <button type="button" (click)="abrir('painel')">Administração</button>
+    <button
+      class="brand"
+      type="button"
+      (click)="abrir('catalogo')"
+      aria-label="Estética e Bem-Estar, voltar à loja"
+    >
+      <app-icone nome="folha"></app-icone>
+      <span>
+        Estética
+        <span class="brand-e">&</span>
+        Bem-Estar
+      </span>
+    </button>
+    <nav
+      class="loja-nav"
+      aria-label="Navegação principal"
+    >
+      <button
+        type="button"
+        (click)="abrir('catalogo')"
+        [attr.aria-current]="tela === 'catalogo' ? 'page' : null"
+      >
+        Loja
+      </button>
+      <button
+        type="button"
+        (click)="abrir('cliente')"
+        [attr.aria-current]="tela === 'cliente' ? 'page' : null"
+      >
+        Cadastro
+      </button>
+      <button
+        type="button"
+        (click)="abrir('meus')"
+        [attr.aria-current]="tela === 'meus' ? 'page' : null"
+      >
+        Meus pedidos
+      </button>
+      <button
+        class="nav-carrinho"
+        type="button"
+        (click)="abrir('carrinho')"
+        [attr.aria-current]="tela === 'carrinho' ? 'page' : null"
+      >
+        <app-icone nome="carrinho"></app-icone>
+        Carrinho
+        <span class="contador">{{ carrinho.itens.length }}</span>
+      </button>
+      <button
+        class="nav-admin"
+        type="button"
+        (click)="abrir('painel')"
+        [attr.aria-current]="emAdministracao ? 'page' : null"
+      >
+        <app-icone nome="inicio"></app-icone>
+        Administração
+      </button>
     </nav>
   </div>
 </header>
 
-<main class="pagina">
-  <div class="alerta" [class.alerta-erro]="aviso.temErro" role="alert" *ngIf="aviso.mensagem">{{aviso.mensagem}}</div>
-  
+<div
+  class="layout-principal"
+  [class.layout-admin]="emAdministracao"
+>
+  <aside
+    class="admin-sidebar"
+    *ngIf="emAdministracao"
+  >
+    <div class="sidebar-titulo">
+      <app-icone nome="inicio"></app-icone>
+      <strong>Administração</strong>
+    </div>
+    <nav aria-label="Administração">
+      <button
+        type="button"
+        *ngFor="let item of menuAdmin"
+        (click)="abrir(item.tela)"
+        [attr.aria-current]="tela === item.tela ? 'page' : null"
+      >
+        <app-icone [nome]="item.icone"></app-icone>
+        <span>
+          <strong>{{ item.nome }}</strong>
+          <small>{{ item.descricao }}</small>
+        </span>
+      </button>
+    </nav>
+    <button
+      class="voltar-loja botao-leve"
+      type="button"
+      (click)="abrir('catalogo')"
+    >
+      <app-icone nome="voltar"></app-icone>
+      Voltar à loja
+    </button>
+  </aside>
 
-  <nav class="admin-nav" aria-label="Administração" *ngIf="tela === 'painel' || tela === 'clientes' || tela === 'funcionarios' || tela === 'produtos' || tela === 'servicos' || tela === 'categorias' || tela === 'estoque' || tela === 'entradas' || tela === 'pedidos'">
-    <button (click)="abrir('painel')">Resumo</button><button (click)="abrir('clientes')">Clientes</button>
-    <button (click)="abrir('funcionarios')">Funcionários</button><button (click)="abrir('produtos')">Produtos</button>
-    <button (click)="abrir('servicos')">Serviços</button><button (click)="abrir('categorias')">Categorias</button>
-    <button (click)="abrir('entradas')">Entradas</button><button (click)="abrir('estoque')">Estoque</button>
-    <button (click)="abrir('pedidos')">Pedidos</button>
-  </nav>
+  <main
+    class="pagina"
+    id="conteudo"
+    tabindex="-1"
+    [class.pagina-cadastro]="tela === 'cliente'"
+  >
+    <div
+      class="alerta"
+      [class.alerta-erro]="aviso.temErro"
+      role="alert"
+      *ngIf="aviso.mensagem"
+    >
+      <span>{{ aviso.mensagem }}</span>
+      <button
+        type="button"
+        class="fechar-alerta"
+        (click)="aviso.limpar()"
+        aria-label="Fechar mensagem"
+      >
+        <app-icone nome="fechar"></app-icone>
+      </button>
+    </div>
 
-  <app-catalogo *ngIf="tela === 'catalogo'"></app-catalogo>
-  <app-clientes *ngIf="tela === 'cliente'" (voltar)="abrir('catalogo')"></app-clientes>
-  <app-clientes *ngIf="tela === 'clientes'" [administracao]="true" (voltar)="abrir('catalogo')"></app-clientes>
-  <app-carrinho *ngIf="tela === 'carrinho'" [identidade]="identidade" (confirmado)="abrir('meus')"></app-carrinho>
-  <app-pedidos *ngIf="tela === 'meus'" [identidade]="identidade"></app-pedidos>
-  <app-pedidos *ngIf="tela === 'pedidos'" [identidade]="identidade" [administracao]="true"></app-pedidos>
-  <app-painel *ngIf="tela === 'painel'"></app-painel>
-  <app-funcionarios *ngIf="tela === 'funcionarios'"></app-funcionarios>
-  <app-produtos *ngIf="tela === 'produtos'"></app-produtos>
-  <app-servicos *ngIf="tela === 'servicos'"></app-servicos>
-  <app-categorias *ngIf="tela === 'categorias'"></app-categorias>
-  <app-estoque *ngIf="tela === 'estoque'"></app-estoque>
-  <app-entradas *ngIf="tela === 'entradas'"></app-entradas>
-</main>
+    <app-catalogo *ngIf="tela === 'catalogo'"></app-catalogo>
+    <app-clientes
+      *ngIf="tela === 'cliente'"
+      (voltar)="abrir('catalogo')"
+    ></app-clientes>
+    <app-clientes
+      *ngIf="tela === 'clientes'"
+      [administracao]="true"
+      (voltar)="abrir('catalogo')"
+    ></app-clientes>
+    <app-carrinho
+      *ngIf="tela === 'carrinho'"
+      [identidade]="identidade"
+      (confirmado)="abrir('meus')"
+      (continuar)="abrir('catalogo')"
+    ></app-carrinho>
+    <app-pedidos
+      *ngIf="tela === 'meus'"
+      [identidade]="identidade"
+    ></app-pedidos>
+    <app-pedidos
+      *ngIf="tela === 'pedidos'"
+      [identidade]="identidade"
+      [administracao]="true"
+    ></app-pedidos>
+    <app-painel *ngIf="tela === 'painel'"></app-painel>
+    <app-funcionarios *ngIf="tela === 'funcionarios'"></app-funcionarios>
+    <app-produtos *ngIf="tela === 'produtos'"></app-produtos>
+    <app-servicos *ngIf="tela === 'servicos'"></app-servicos>
+    <app-categorias *ngIf="tela === 'categorias'"></app-categorias>
+    <app-estoque *ngIf="tela === 'estoque'"></app-estoque>
+    <app-entradas *ngIf="tela === 'entradas'"></app-entradas>
+  </main>
+</div>
 
-<footer>Estética & Bem-Estar · Atividade integradora</footer>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <strong>Estética & Bem-Estar</strong>
+      <p>Produtos e serviços para cuidar de você.</p>
+    </div>
+    <nav aria-label="Links do rodapé">
+      <button
+        type="button"
+        (click)="abrir('catalogo')"
+      >
+        Nossa loja
+      </button>
+      <button
+        type="button"
+        (click)="abrir('cliente')"
+      >
+        Cadastre-se
+      </button>
+      <button
+        type="button"
+        (click)="abrir('meus')"
+      >
+        Meus pedidos
+      </button>
+    </nav>
+    <small>Estética & Bem-Estar · Atividade integradora</small>
+  </div>
+</footer>

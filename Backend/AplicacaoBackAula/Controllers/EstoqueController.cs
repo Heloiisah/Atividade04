@@ -30,12 +30,16 @@ namespace AplicacaoBackAula.Controllers
             var estoque = await Projetar(_context.Estoques.Where(e => e.Iditem == id))
                 .FirstOrDefaultAsync();
             if (estoque == null)
+            {
                 return NotFound(new { mensagem = "Produto não encontrado no estoque." });
+            }
+
             return Ok(estoque);
         }
 
-        private static IQueryable<EstoqueConsultaDTO> Projetar(IQueryable<Estoque> consulta) =>
-            consulta.Select(e => new EstoqueConsultaDTO
+        private static IQueryable<EstoqueConsultaDTO> Projetar(IQueryable<Estoque> consulta)
+        {
+            return consulta.Select(e => new EstoqueConsultaDTO
             {
                 IdItem = e.Iditem,
                 Item = e.IditemNavigation.IditemNavigation.Item1,
@@ -47,5 +51,6 @@ namespace AplicacaoBackAula.Controllers
                 QuantidadeEstoque = e.QuantidadeEstoque,
                 AtivoProdutoServico = e.IditemNavigation.IditemNavigation.AtivoProdutoServico
             });
+        }
     }
 }

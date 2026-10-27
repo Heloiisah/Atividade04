@@ -1,16 +1,157 @@
-﻿    <h1>Carrinho</h1><p class="intro">Escolha um funcionário para cada item antes de confirmar.</p>
-    <p class="vazio" *ngIf="!carrinho.itens.length">O carrinho está vazio. Volte ao catálogo para escolher um item.</p>
-    <div class="linha carrinho-linha" *ngFor="let linha of carrinho.itens"><span><strong>{{linha.item.item}}</strong><small>{{linha.item.tipoItem === 'P' ? 'Produto' : 'Serviço'}} · {{linha.item.preco | currency:'BRL'}}</small></span>
-      <label>Quantidade <input type="number" min="1" [attr.max]="linha.item.tipoItem === 'P' ? linha.item.quantidadeEstoque : null" [(ngModel)]="linha.quantidade"></label>
-      <label>Funcionário <select [(ngModel)]="linha.idFuncionario"><option [ngValue]="0">Selecione</option>
-        <option *ngFor="let f of funcionarios" [ngValue]="f.idPessoa" [disabled]="f.pessoa.ativoPessoa !== 'S'">{{f.pessoa.nome}} · {{f.cargo}}</option></select></label>
-      <strong>{{linha.quantidade * linha.item.preco | currency:'BRL'}}</strong>
-      <button type="button" class="botao-leve" (click)="carrinho.remover(linha.item.idItem)">Remover</button></div>
-    <div class="total" *ngIf="carrinho.itens.length"><strong>Total {{carrinho.total | currency:'BRL'}}</strong></div>
-    <h2>Identificação do cliente</h2><p>Informe os mesmos dados cadastrados para registrar o pedido.</p>
+<header class="titulo-pagina">
+  <h1>Carrinho de compras</h1>
+  <p>Confira os itens e identifique o cliente para confirmar seu pedido.</p>
+</header>
+<div
+  class="vazio"
+  *ngIf="!carrinho.itens.length"
+>
+  <app-icone nome="carrinho"></app-icone>
+  <h2>Seu carrinho está vazio</h2>
+  <p>Escolha produtos e serviços no catálogo para começar.</p>
+  <button
+    type="button"
+    (click)="continuar.emit()"
+  >
+    Explorar o catálogo
+  </button>
+</div>
+<div
+  class="carrinho-layout"
+  *ngIf="carrinho.itens.length"
+>
+  <section
+    class="carrinho-itens"
+    aria-label="Itens no carrinho"
+  >
+    <div class="lista-titulo">
+      <h2>Seus itens</h2>
+      <span>{{ carrinho.itens.length }} {{ carrinho.itens.length === 1 ? 'item' : 'itens' }}</span>
+    </div>
+    <article
+      class="carrinho-linha"
+      *ngFor="let linha of carrinho.itens"
+    >
+      <img
+        class="carrinho-imagem"
+        [src]="imagemItem(linha.item)"
+        alt="Imagem ilustrativa do tipo de item"
+        width="112"
+        height="112"
+      />
+      <div class="carrinho-item-info">
+        <small class="tipo">
+          {{ linha.item.tipoItem === 'P' ? 'Produto' : 'Serviço' }} · {{ linha.item.categoria }}
+        </small>
+        <h3>{{ linha.item.item }}</h3>
+        <p>{{ linha.item.preco | currency: 'BRL' }} por unidade</p>
+        <label>
+          Funcionário responsável
+          <select [(ngModel)]="linha.idFuncionario">
+            <option [ngValue]="0">Selecione um funcionário</option>
+            <option
+              *ngFor="let f of funcionarios"
+              [ngValue]="f.idPessoa"
+              [disabled]="f.pessoa.ativoPessoa !== 'S'"
+            >
+              {{ f.pessoa.nome }} · {{ f.cargo }}
+            </option>
+          </select>
+        </label>
+      </div>
+      <div class="carrinho-quantidade">
+        <label>
+          Quantidade
+          <input
+            type="number"
+            min="1"
+            step="1"
+            [attr.max]="linha.item.tipoItem === 'P' ? linha.item.quantidadeEstoque : null"
+            [(ngModel)]="linha.quantidade"
+          />
+        </label>
+        <strong>{{ linha.quantidade * linha.item.preco | currency: 'BRL' }}</strong>
+        <button
+          type="button"
+          class="botao-perigo-leve"
+          (click)="carrinho.remover(linha.item.idItem)"
+          [attr.aria-label]="'Remover ' + linha.item.item"
+        >
+          <app-icone nome="remover"></app-icone>
+          Remover
+        </button>
+      </div>
+    </article>
+    <button
+      type="button"
+      class="botao-leve continuar-comprando"
+      (click)="continuar.emit()"
+    >
+      <app-icone nome="voltar"></app-icone>
+      Continuar comprando
+    </button>
+  </section>
+  <aside
+    class="resumo-compra"
+    aria-label="Resumo do pedido"
+  >
+    <h2>Resumo do pedido</h2>
+    <div class="resumo-valor">
+      <span>Subtotal</span>
+      <strong>{{ carrinho.total | currency: 'BRL' }}</strong>
+    </div>
+    <div class="resumo-total">
+      <span>Total do pedido</span>
+      <strong>{{ carrinho.total | currency: 'BRL' }}</strong>
+    </div>
+    <h3>Identificação do cliente</h3>
+    <p class="ajuda-formulario">Use os mesmos dados informados no cadastro.</p>
     <div class="campos identificacao">
-      <label>ID do cliente <input type="number" min="1" [(ngModel)]="identidade.idPessoa"></label>
-      <label>CPF <input type="number" [(ngModel)]="identidade.cpf"></label>
-      <label>Telefone <input type="number" [(ngModel)]="identidade.telefone"></label>
-      <label>E-mail <input type="email" [(ngModel)]="identidade.email"></label></div>
-    <button type="button" (click)="confirmar()" [disabled]="!carrinho.itens.length || !quantidadeValida()">Confirmar pedido</button>
+      <label>
+        ID do cliente
+        <input
+          type="number"
+          min="1"
+          [(ngModel)]="identidade.idPessoa"
+        />
+      </label>
+      <label>
+        CPF
+        <input
+          type="number"
+          [(ngModel)]="identidade.cpf"
+        />
+      </label>
+      <label>
+        Telefone
+        <input
+          type="number"
+          [(ngModel)]="identidade.telefone"
+        />
+      </label>
+      <label>
+        E-mail
+        <input
+          type="email"
+          [(ngModel)]="identidade.email"
+        />
+      </label>
+    </div>
+    <p
+      class="erro-campo"
+      *ngIf="!quantidadeValida()"
+    >
+      Confira as quantidades e o estoque disponível.
+    </p>
+    <button
+      class="botao-finalizar"
+      type="button"
+      (click)="confirmar()"
+      [disabled]="!quantidadeValida()"
+    >
+      Confirmar pedido
+      <app-icone nome="seta"></app-icone>
+    </button>
+    <small class="resumo-nota">Seu pedido será registrado em aberto.</small>
+  </aside>
+</div>

@@ -1,15 +1,109 @@
-﻿  <h1>Entrada de produtos</h1>
-    <form class="formulario" #formEntrada="ngForm" (ngSubmit)="registrarEntrada()"><div class="campos">
-      <label>Produto <select name="produto" [(ngModel)]="entradaForm.idItem" required><option [ngValue]="0">Selecione</option>
-        <option *ngFor="let e of estoques" [ngValue]="e.idItem">#{{e.idItem}} {{e.item}}</option></select></label>
-      <label>Data de entrada <input name="data" type="date" [(ngModel)]="entradaForm.dataEntradaProduto" required></label>
-      <label>Quantidade <input name="quantidade" type="number" min="1" [(ngModel)]="entradaForm.quantidadeEntrada" required></label>
-      <label>Unidade <input name="unidade" [(ngModel)]="entradaForm.unidade" required maxlength="10"></label>
-      <label>Valor unitário <input name="valor" type="number" min="0.01" step="0.01" [(ngModel)]="entradaForm.valorUnitarioEntrada" required></label></div>
-      <button [disabled]="formEntrada.invalid || !entradaForm.idItem">Registrar entrada</button>
-      <small *ngIf="formEntrada.invalid || !entradaForm.idItem">Informe produto, data, quantidade, unidade e valor válidos.</small></form>
-    <div class="consulta-id"><label>Consultar entrada pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label><button (click)="consultarEntrada()" [disabled]="!consultaId">Consultar</button></div>
-    <article class="detalhe" *ngIf="entradaDetalhe"><h2>Entrada #{{entradaDetalhe.idEntradaProduto}}</h2><p>Produto #{{entradaDetalhe.idItem}} · {{entradaDetalhe.dataEntradaProduto}} · {{entradaDetalhe.quantidadeEntrada}} {{entradaDetalhe.unidade}} · {{entradaDetalhe.valorUnitarioEntrada | currency:'BRL'}} / unidade</p></article>
-    <div class="linha" *ngFor="let e of entradas"><span><strong>Entrada #{{e.idEntradaProduto}}</strong><small>Produto #{{e.idItem}} · {{e.dataEntradaProduto}}</small></span>
-      <span>{{e.quantidadeEntrada}} {{e.unidade}}</span><strong>{{e.valorUnitarioEntrada | currency:'BRL'}} / unidade</strong></div>
-  
+<header class="titulo-pagina">
+  <h1>Entrada de produtos</h1>
+  <p>Registre as mercadorias recebidas e acompanhe as entradas no estoque.</p>
+</header>
+<form
+  class="formulario"
+  #formEntrada="ngForm"
+  (ngSubmit)="registrarEntrada()"
+>
+  <div class="campos">
+    <label>
+      Produto
+      <select
+        name="produto"
+        [(ngModel)]="entradaForm.idItem"
+        required
+      >
+        <option [ngValue]="0">Selecione</option>
+        <option
+          *ngFor="let e of estoques"
+          [ngValue]="e.idItem"
+        >
+          #{{ e.idItem }} {{ e.item }}
+        </option>
+      </select>
+    </label>
+    <label>
+      Data de entrada
+      <input
+        name="data"
+        type="date"
+        [(ngModel)]="entradaForm.dataEntradaProduto"
+        required
+      />
+    </label>
+    <label>
+      Quantidade
+      <input
+        name="quantidade"
+        type="number"
+        min="1"
+        [(ngModel)]="entradaForm.quantidadeEntrada"
+        required
+      />
+    </label>
+    <label>
+      Unidade
+      <input
+        name="unidade"
+        [(ngModel)]="entradaForm.unidade"
+        required
+        maxlength="10"
+      />
+    </label>
+    <label>
+      Valor unitário
+      <input
+        name="valor"
+        type="number"
+        min="0.01"
+        step="0.01"
+        [(ngModel)]="entradaForm.valorUnitarioEntrada"
+        required
+      />
+    </label>
+  </div>
+  <button [disabled]="formEntrada.invalid || !entradaForm.idItem">Registrar entrada</button>
+  <small *ngIf="formEntrada.invalid || !entradaForm.idItem">
+    Informe produto, data, quantidade, unidade e valor válidos.
+  </small>
+</form>
+<div class="consulta-id">
+  <label>
+    Consultar entrada pelo ID
+    <input
+      type="number"
+      min="1"
+      [(ngModel)]="consultaId"
+    />
+  </label>
+  <button
+    (click)="consultarEntrada()"
+    [disabled]="!consultaId"
+  >
+    Consultar
+  </button>
+</div>
+<article
+  class="detalhe"
+  *ngIf="entradaDetalhe"
+>
+  <h2>Entrada #{{ entradaDetalhe.idEntradaProduto }}</h2>
+  <p>
+    Produto #{{ entradaDetalhe.idItem }} · {{ entradaDetalhe.dataEntradaProduto }} ·
+    {{ entradaDetalhe.quantidadeEntrada }} {{ entradaDetalhe.unidade }} ·
+    {{ entradaDetalhe.valorUnitarioEntrada | currency: 'BRL' }} / unidade
+  </p>
+</article>
+<div
+  class="linha"
+  *ngFor="let e of entradas"
+>
+  <span>
+    <strong>Entrada #{{ e.idEntradaProduto }}</strong>
+    <small>Produto #{{ e.idItem }} · {{ e.dataEntradaProduto }}</small>
+  </span>
+  <span>{{ e.quantidadeEntrada }} {{ e.unidade }}</span>
+  <strong>{{ e.valorUnitarioEntrada | currency: 'BRL' }} / unidade</strong>
+</div>

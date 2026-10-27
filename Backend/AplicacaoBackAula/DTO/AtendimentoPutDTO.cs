@@ -1,4 +1,4 @@
-﻿namespace AplicacaoBackAula.DTO
+namespace AplicacaoBackAula.DTO
 {
     public class AtendimentoPutDTO
     {
@@ -13,6 +13,6 @@
 
         public List<AtendimentoItemPutDTO> Itens { get; set; } = new();
 
-  
+
     }
 }

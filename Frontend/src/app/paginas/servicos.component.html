@@ -1,14 +1,121 @@
-﻿  <h1>Serviços</h1>
-    <form class="formulario" #formServico="ngForm" (ngSubmit)="salvarServico()"><h2>{{servicoForm.idItem ? 'Editar' : 'Cadastrar'}} serviço</h2>
-      <div class="campos"><label>Categoria <select name="categoria" [(ngModel)]="servicoForm.idCategoria" required><option [ngValue]="0">Selecione</option><option *ngFor="let c of categorias" [ngValue]="c.idcategoria">{{c.categoria}}</option></select></label>
-        <label>Nome <input name="nome" [(ngModel)]="servicoForm.item" required maxlength="40"></label>
-        <label>Descrição <input name="descricao" [(ngModel)]="servicoForm.descricaoItem" required maxlength="200"></label>
-        <label>Preço <input name="preco" type="number" min="0.01" step="0.01" [(ngModel)]="servicoForm.preco" required></label>
-        <label>Situação <select name="ativo" [(ngModel)]="servicoForm.ativoProdutoServico"><option value="S">Ativo</option><option value="N">Inativo</option></select></label></div>
-      <div class="acoes"><button [disabled]="formServico.invalid || !servicoForm.idCategoria">Salvar serviço</button>
-        <button type="button" class="botao-leve" (click)="servicoForm=novoServico()">Limpar</button></div>
-      <small *ngIf="formServico.invalid || !servicoForm.idCategoria">Confira categoria, nome, descrição e preço.</small></form>
-    <div class="consulta-id"><label>Consultar serviço pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label><button (click)="consultarServico()" [disabled]="!consultaId">Consultar</button></div>
-    <div class="linha" *ngFor="let s of servicos"><span><strong>#{{s.idItem}} {{s.item}}</strong><small>{{s.descricaoItem}} · {{s.ativoProdutoServico === 'S' ? 'Ativo' : 'Inativo'}}</small></span>
-      <strong>{{s.preco | currency:'BRL'}}</strong><div class="acoes"><button class="botao-leve" (click)="editarServico(s)">Editar</button><button class="botao-leve" (click)="desativarServico(s.idItem)">Desativar</button></div></div>
-  
+<header class="titulo-pagina">
+  <h1>Serviços</h1>
+  <p>Cadastre os tratamentos e mantenha o catálogo atualizado.</p>
+</header>
+<form
+  class="formulario"
+  #formServico="ngForm"
+  (ngSubmit)="salvarServico()"
+>
+  <h2>{{ servicoForm.idItem ? 'Editar' : 'Cadastrar' }} serviço</h2>
+  <div class="campos">
+    <label>
+      Categoria
+      <select
+        name="categoria"
+        [(ngModel)]="servicoForm.idCategoria"
+        required
+      >
+        <option [ngValue]="0">Selecione</option>
+        <option
+          *ngFor="let c of categorias"
+          [ngValue]="c.idcategoria"
+        >
+          {{ c.categoria }}
+        </option>
+      </select>
+    </label>
+    <label>
+      Nome
+      <input
+        name="nome"
+        [(ngModel)]="servicoForm.item"
+        required
+        maxlength="40"
+      />
+    </label>
+    <label>
+      Descrição
+      <input
+        name="descricao"
+        [(ngModel)]="servicoForm.descricaoItem"
+        required
+        maxlength="200"
+      />
+    </label>
+    <label>
+      Preço
+      <input
+        name="preco"
+        type="number"
+        min="0.01"
+        step="0.01"
+        [(ngModel)]="servicoForm.preco"
+        required
+      />
+    </label>
+    <label>
+      Situação
+      <select
+        name="ativo"
+        [(ngModel)]="servicoForm.ativoProdutoServico"
+      >
+        <option value="S">Ativo</option>
+        <option value="N">Inativo</option>
+      </select>
+    </label>
+  </div>
+  <div class="acoes">
+    <button [disabled]="formServico.invalid || !servicoForm.idCategoria">Salvar serviço</button>
+    <button
+      type="button"
+      class="botao-leve"
+      (click)="servicoForm = novoServico()"
+    >
+      Limpar
+    </button>
+  </div>
+  <small *ngIf="formServico.invalid || !servicoForm.idCategoria">
+    Confira categoria, nome, descrição e preço.
+  </small>
+</form>
+<div class="consulta-id">
+  <label>
+    Consultar serviço pelo ID
+    <input
+      type="number"
+      min="1"
+      [(ngModel)]="consultaId"
+    />
+  </label>
+  <button
+    (click)="consultarServico()"
+    [disabled]="!consultaId"
+  >
+    Consultar
+  </button>
+</div>
+<div
+  class="linha"
+  *ngFor="let s of servicos"
+>
+  <span>
+    <strong>#{{ s.idItem }} {{ s.item }}</strong>
+    <small>{{ s.descricaoItem }} · {{ s.ativoProdutoServico === 'S' ? 'Ativo' : 'Inativo' }}</small>
+  </span>
+  <strong>{{ s.preco | currency: 'BRL' }}</strong>
+  <div class="acoes">
+    <button
+      class="botao-leve"
+      (click)="editarServico(s)"
+    >
+      Editar
+    </button>
+    <button
+      class="botao-leve"
+      (click)="desativarServico(s.idItem)"
+    >
+      Desativar
+    </button>
+  </div>
+</div>

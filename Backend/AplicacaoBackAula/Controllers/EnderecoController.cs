@@ -1,4 +1,4 @@
-﻿
+
 using AplicacaoBackAula.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

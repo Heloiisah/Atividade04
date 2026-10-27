@@ -1,9 +1,65 @@
-﻿  <h1>Categorias</h1>
-    <form class="formulario" #formCategoria="ngForm" (ngSubmit)="salvarCategoria()"><label>Nome da categoria
-      <input name="categoria" [(ngModel)]="categoriaForm.categoria" maxlength="35" required></label>
-      <div class="acoes"><button [disabled]="formCategoria.invalid">Salvar categoria</button>
-        <button type="button" class="botao-leve" (click)="categoriaForm={idcategoria:0,categoria:''}">Limpar</button></div></form>
-    <div class="consulta-id"><label>Consultar categoria pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label><button (click)="consultarCategoria()" [disabled]="!consultaId">Consultar</button></div>
-    <div class="linha" *ngFor="let c of categorias"><strong>#{{c.idcategoria}} {{c.categoria}}</strong>
-      <div class="acoes"><button class="botao-leve" (click)="editarCategoria(c)">Editar</button><button class="botao-leve" (click)="excluirCategoria(c.idcategoria)">Excluir</button></div></div>
-  
+<header class="titulo-pagina">
+  <h1>Categorias</h1>
+  <p>Organize os produtos e serviços do catálogo.</p>
+</header>
+<form
+  class="formulario"
+  #formCategoria="ngForm"
+  (ngSubmit)="salvarCategoria()"
+>
+  <label>
+    Nome da categoria
+    <input
+      name="categoria"
+      [(ngModel)]="categoriaForm.categoria"
+      maxlength="35"
+      required
+    />
+  </label>
+  <div class="acoes">
+    <button [disabled]="formCategoria.invalid">Salvar categoria</button>
+    <button
+      type="button"
+      class="botao-leve"
+      (click)="categoriaForm = { idcategoria: 0, categoria: '' }"
+    >
+      Limpar
+    </button>
+  </div>
+</form>
+<div class="consulta-id">
+  <label>
+    Consultar categoria pelo ID
+    <input
+      type="number"
+      min="1"
+      [(ngModel)]="consultaId"
+    />
+  </label>
+  <button
+    (click)="consultarCategoria()"
+    [disabled]="!consultaId"
+  >
+    Consultar
+  </button>
+</div>
+<div
+  class="linha"
+  *ngFor="let c of categorias"
+>
+  <strong>#{{ c.idcategoria }} {{ c.categoria }}</strong>
+  <div class="acoes">
+    <button
+      class="botao-leve"
+      (click)="editarCategoria(c)"
+    >
+      Editar
+    </button>
+    <button
+      class="botao-leve"
+      (click)="excluirCategoria(c.idcategoria)"
+    >
+      Excluir
+    </button>
+  </div>
+</div>

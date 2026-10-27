@@ -1,4 +1,4 @@
-﻿import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
@@ -11,13 +11,26 @@ export class AvisoService {
     this.temErro = erro;
   }
 
-  limpar(): void { this.mensagem = ''; }
+  limpar(): void {
+    this.mensagem = '';
+  }
 
   mostrarErro(erro: unknown): void {
     const resposta = erro as HttpErrorResponse;
-    const texto = typeof resposta.error === 'string' ? resposta.error : resposta.error?.mensagem;
-    this.avisar(texto || (resposta.status === 0 ? 'A API não respondeu. Verifique se está em execução.' :
-      resposta.status === 404 ? 'Registro não encontrado.' : 'Não foi possível concluir a operação.'), true);
+    let mensagem = 'Não foi possível concluir a operação.';
+
+    if (resposta.status === 0) {
+      mensagem = 'A API não respondeu. Verifique se está em execução.';
+    } else if (resposta.status === 404) {
+      mensagem = 'Registro não encontrado.';
+    }
+
+    if (typeof resposta.error === 'string' && resposta.error) {
+      mensagem = resposta.error;
+    } else if (resposta.error && resposta.error.mensagem) {
+      mensagem = resposta.error.mensagem;
+    }
+
+    this.avisar(mensagem, true);
   }
 }
-

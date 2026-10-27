@@ -1,4 +1,4 @@
-﻿using AplicacaoBackAula.Models;
+using AplicacaoBackAula.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,7 +45,9 @@ namespace AplicacaoBackAula.Controllers
         public async Task<ActionResult<Pessoa>> PostPessoa(Pessoa pessoa)
         {
             if (await _context.Pessoas.AnyAsync(p => p.Cpf == pessoa.Cpf || p.Email == pessoa.Email))
+            {
                 return BadRequest("CPF ou e-mail já cadastrado.");
+            }
 
             // PREPARA OS DADOS PARA SEREM ENVIADOS AO BANCO DE DADOS
             _context.Pessoas.Add(pessoa);
@@ -75,13 +77,18 @@ namespace AplicacaoBackAula.Controllers
 
             var atual = await _context.Pessoas.AsNoTracking().FirstOrDefaultAsync(p => p.Idpessoa == id);
             if (atual == null)
+            {
                 return NotFound();
+            }
+
             var verificarCpf = atual.Cpf != pessoa.Cpf;
             var verificarEmail = atual.Email != pessoa.Email;
             if (await _context.Pessoas.AnyAsync(p => p.Idpessoa != id &&
                 ((verificarCpf && p.Cpf == pessoa.Cpf) ||
                  (verificarEmail && p.Email == pessoa.Email))))
+            {
                 return BadRequest("CPF ou e-mail já cadastrado.");
+            }
 
             // PREPARA A ALTERAÇÃO DOS DADOS DA PESSOA
             _context.Entry(pessoa).State = EntityState.Modified;

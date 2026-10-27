@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AplicacaoBackAula.DTO;
 using AplicacaoBackAula.Models;
@@ -114,7 +114,9 @@ namespace AplicacaoBackAula.Controllers
             }
 
             if (await _context.Pessoas.AnyAsync(p => p.Cpf == dto.CPF || p.Email == dto.Email))
+            {
                 return BadRequest("CPF ou e-mail já cadastrado.");
+            }
 
             // CRIA O OBJETO PESSOA E PROJETA OS DADOS DO DTO NESSE OBJETO
             var ObjPessoa = new Pessoa
@@ -209,7 +211,9 @@ namespace AplicacaoBackAula.Controllers
             if (await _context.Pessoas.AnyAsync(p => p.Idpessoa != id &&
                 ((verificarCpf && p.Cpf == dto.CPF) ||
                  (verificarEmail && p.Email == dto.Email))))
+            {
                 return BadRequest("CPF ou e-mail já cadastrado.");
+            }
 
             // PROJETA OS DADOS DO DTO PARA O MODELO PESSOA
             pessoa.Nome = dto.Nome;

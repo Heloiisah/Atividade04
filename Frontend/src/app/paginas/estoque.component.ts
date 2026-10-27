@@ -7,7 +7,9 @@ import { AvisoService } from '../servicos/aviso.service';
 import { Estoque } from '../modelos/modelos';
 
 @Component({
-  selector: 'app-estoque', standalone: true, imports: [CommonModule, FormsModule],
+  selector: 'app-estoque',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './estoque.component.html'
 })
 export class EstoqueComponent implements OnInit {
@@ -15,16 +17,24 @@ export class EstoqueComponent implements OnInit {
   estoques: Estoque[] = [];
   estoqueDetalhe?: Estoque;
 
-  constructor(private api: ApiService, private aviso: AvisoService) {}
+  constructor(
+    private api: ApiService,
+    private aviso: AvisoService
+  ) {}
 
   async ngOnInit(): Promise<void> {
-    try { this.estoques = await firstValueFrom(this.api.estoque()); }
-    catch (erro) { this.aviso.mostrarErro(erro); }
+    try {
+      this.estoques = await firstValueFrom(this.api.estoque());
+    } catch (erro) {
+      this.aviso.mostrarErro(erro);
+    }
   }
 
   async consultarEstoque(): Promise<void> {
-    try { this.estoqueDetalhe = await firstValueFrom(this.api.estoqueItem(this.consultaId)); }
-    catch (erro) { this.aviso.mostrarErro(erro); }
+    try {
+      this.estoqueDetalhe = await firstValueFrom(this.api.estoqueItem(this.consultaId));
+    } catch (erro) {
+      this.aviso.mostrarErro(erro);
+    }
   }
 }
-

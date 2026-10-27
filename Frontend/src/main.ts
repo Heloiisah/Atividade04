@@ -6,6 +6,6 @@ import { LOCALE_ID } from '@angular/core';
 import { AppComponent } from './app/app.component';
 
 registerLocaleData(localePt);
-bootstrapApplication(AppComponent, { providers: [provideHttpClient(),
-  { provide: LOCALE_ID, useValue: 'pt-BR' }] })
-  .catch(error => console.error(error));
+bootstrapApplication(AppComponent, {
+  providers: [provideHttpClient(), { provide: LOCALE_ID, useValue: 'pt-BR' }]
+}).catch((error) => console.error(error));

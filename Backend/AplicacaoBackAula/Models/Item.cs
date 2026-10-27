@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace AplicacaoBackAula.Models;
@@ -25,4 +25,3 @@ public partial class Item
 
     public virtual Produto? Produto { get; set; }
 }
-
