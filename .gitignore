@@ -37,3 +37,6 @@ appsettings.*.Local.json
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Enunciado da atividade mantido apenas localmente
+/ROTEIRO_DA_ATIVIDADE.pdf
