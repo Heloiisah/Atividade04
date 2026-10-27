@@ -1,0 +1,41 @@
+﻿<header class="site-header">
+  <div class="header-inner">
+    <button class="brand" type="button" (click)="abrir('catalogo')">Estética <span>&</span> Bem-Estar</button>
+    <nav aria-label="Loja">
+      <button type="button" (click)="abrir('catalogo')">Catálogo</button>
+      <button type="button" (click)="abrir('cliente')">Cadastro</button>
+      <button type="button" (click)="abrir('carrinho')">Carrinho ({{carrinho.itens.length}})</button>
+      <button type="button" (click)="abrir('meus')">Meus pedidos</button>
+      <button type="button" (click)="abrir('painel')">Administração</button>
+    </nav>
+  </div>
+</header>
+
+<main class="pagina">
+  <div class="alerta" [class.alerta-erro]="aviso.temErro" role="alert" *ngIf="aviso.mensagem">{{aviso.mensagem}}</div>
+  
+
+  <nav class="admin-nav" aria-label="Administração" *ngIf="tela === 'painel' || tela === 'clientes' || tela === 'funcionarios' || tela === 'produtos' || tela === 'servicos' || tela === 'categorias' || tela === 'estoque' || tela === 'entradas' || tela === 'pedidos'">
+    <button (click)="abrir('painel')">Resumo</button><button (click)="abrir('clientes')">Clientes</button>
+    <button (click)="abrir('funcionarios')">Funcionários</button><button (click)="abrir('produtos')">Produtos</button>
+    <button (click)="abrir('servicos')">Serviços</button><button (click)="abrir('categorias')">Categorias</button>
+    <button (click)="abrir('entradas')">Entradas</button><button (click)="abrir('estoque')">Estoque</button>
+    <button (click)="abrir('pedidos')">Pedidos</button>
+  </nav>
+
+  <app-catalogo *ngIf="tela === 'catalogo'"></app-catalogo>
+  <app-clientes *ngIf="tela === 'cliente'" (voltar)="abrir('catalogo')"></app-clientes>
+  <app-clientes *ngIf="tela === 'clientes'" [administracao]="true" (voltar)="abrir('catalogo')"></app-clientes>
+  <app-carrinho *ngIf="tela === 'carrinho'" [identidade]="identidade" (confirmado)="abrir('meus')"></app-carrinho>
+  <app-pedidos *ngIf="tela === 'meus'" [identidade]="identidade"></app-pedidos>
+  <app-pedidos *ngIf="tela === 'pedidos'" [identidade]="identidade" [administracao]="true"></app-pedidos>
+  <app-painel *ngIf="tela === 'painel'"></app-painel>
+  <app-funcionarios *ngIf="tela === 'funcionarios'"></app-funcionarios>
+  <app-produtos *ngIf="tela === 'produtos'"></app-produtos>
+  <app-servicos *ngIf="tela === 'servicos'"></app-servicos>
+  <app-categorias *ngIf="tela === 'categorias'"></app-categorias>
+  <app-estoque *ngIf="tela === 'estoque'"></app-estoque>
+  <app-entradas *ngIf="tela === 'entradas'"></app-entradas>
+</main>
+
+<footer>Estética & Bem-Estar · Atividade integradora</footer>

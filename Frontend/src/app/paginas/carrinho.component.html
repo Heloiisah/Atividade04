@@ -1,0 +1,16 @@
+﻿    <h1>Carrinho</h1><p class="intro">Escolha um funcionário para cada item antes de confirmar.</p>
+    <p class="vazio" *ngIf="!carrinho.itens.length">O carrinho está vazio. Volte ao catálogo para escolher um item.</p>
+    <div class="linha carrinho-linha" *ngFor="let linha of carrinho.itens"><span><strong>{{linha.item.item}}</strong><small>{{linha.item.tipoItem === 'P' ? 'Produto' : 'Serviço'}} · {{linha.item.preco | currency:'BRL'}}</small></span>
+      <label>Quantidade <input type="number" min="1" [attr.max]="linha.item.tipoItem === 'P' ? linha.item.quantidadeEstoque : null" [(ngModel)]="linha.quantidade"></label>
+      <label>Funcionário <select [(ngModel)]="linha.idFuncionario"><option [ngValue]="0">Selecione</option>
+        <option *ngFor="let f of funcionarios" [ngValue]="f.idPessoa" [disabled]="f.pessoa.ativoPessoa !== 'S'">{{f.pessoa.nome}} · {{f.cargo}}</option></select></label>
+      <strong>{{linha.quantidade * linha.item.preco | currency:'BRL'}}</strong>
+      <button type="button" class="botao-leve" (click)="carrinho.remover(linha.item.idItem)">Remover</button></div>
+    <div class="total" *ngIf="carrinho.itens.length"><strong>Total {{carrinho.total | currency:'BRL'}}</strong></div>
+    <h2>Identificação do cliente</h2><p>Informe os mesmos dados cadastrados para registrar o pedido.</p>
+    <div class="campos identificacao">
+      <label>ID do cliente <input type="number" min="1" [(ngModel)]="identidade.idPessoa"></label>
+      <label>CPF <input type="number" [(ngModel)]="identidade.cpf"></label>
+      <label>Telefone <input type="number" [(ngModel)]="identidade.telefone"></label>
+      <label>E-mail <input type="email" [(ngModel)]="identidade.email"></label></div>
+    <button type="button" (click)="confirmar()" [disabled]="!carrinho.itens.length || !quantidadeValida()">Confirmar pedido</button>

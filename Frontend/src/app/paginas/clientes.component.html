@@ -1,0 +1,30 @@
+﻿    <h1>{{clienteForm.idPessoa ? 'Editar cliente' : 'Cadastrar cliente'}}</h1>
+    <p class="intro">Cadastre seus dados e anote o ID retornado para acompanhar seus pedidos.</p>
+    <form class="formulario" #formCliente="ngForm" (ngSubmit)="salvarCliente()">
+      <div class="campos">
+        <label>Nome <input name="nome" [(ngModel)]="clienteForm.nome" required maxlength="100"></label>
+        <label>CPF <input name="cpf" type="text" inputmode="numeric" pattern="[0-9]{11}" [ngModel]="clienteForm.cpf || ''" (ngModelChange)="clienteForm.cpf=+$event" required></label>
+        <label>Data de nascimento <input name="nascimento" type="date" [(ngModel)]="clienteForm.dataNascimento" required></label>
+        <label>Sexo <select name="sexo" [(ngModel)]="clienteForm.sexo" required><option value="">Selecione</option><option value="F">Feminino</option><option value="M">Masculino</option><option value="O">Outro</option></select></label>
+        <label>E-mail <input name="email" type="email" [(ngModel)]="clienteForm.email" required maxlength="100"></label>
+        <label>Telefone <input name="telefone" type="text" inputmode="numeric" pattern="[0-9]{10,11}" [ngModel]="clienteForm.telefone || ''" (ngModelChange)="clienteForm.telefone=+$event" required></label>
+      </div>
+      <h2>Endereço</h2>
+      <div class="campos endereco" *ngFor="let e of clienteForm.enderecos; let n=index">
+        <label>CEP <input [name]="'cep'+n" [(ngModel)]="e.cep" pattern="[0-9]{8}" required></label>
+        <label>Número <input [name]="'numero'+n" [(ngModel)]="e.numero" required maxlength="10"></label>
+        <label>Complemento <input [name]="'complemento'+n" [(ngModel)]="e.complemento" maxlength="150"></label>
+        <button type="button" class="botao-leve" *ngIf="clienteForm.enderecos.length > 1" (click)="clienteForm.enderecos.splice(n,1)">Remover</button>
+      </div>
+      <div class="acoes"><button type="button" class="botao-leve" (click)="clienteForm.enderecos.push({idPessoa:0,cep:'',numero:'',complemento:''})">Adicionar endereço</button>
+        <button type="submit" [disabled]="formCliente.invalid">Salvar cliente</button>
+        <button type="button" class="botao-leve" (click)="clienteForm=novoCliente()">Limpar</button>
+        <button type="button" class="botao-leve" (click)="voltar.emit()">Voltar ao catálogo</button></div>
+      <small *ngIf="formCliente.invalid">Confira os campos obrigatórios, CPF, telefone e CEP.</small>
+    </form>
+    <section class="secao" *ngIf="administracao"><h2>Clientes cadastrados</h2>
+      <div class="consulta-id"><label>Consultar pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label>
+        <button (click)="consultarCliente()" [disabled]="!consultaId">Consultar</button></div>
+      <p class="vazio" *ngIf="!pessoas.length">Nenhum cliente encontrado.</p>
+      <div class="linha" *ngFor="let p of pessoas"><span><strong>#{{p.idPessoa}} {{p.nome}}</strong><small>{{p.email}} · {{p.ativoPessoa === 'S' ? 'Ativo' : 'Inativo'}}</small></span>
+        <button class="botao-leve" (click)="editarCliente(p)">Editar</button></div></section>

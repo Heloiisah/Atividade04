@@ -1,0 +1,22 @@
+﻿  <h1>Funcionários</h1>
+    <form class="formulario" #formFunc="ngForm" (ngSubmit)="salvarFuncionario()"><h2>{{funcionarioForm.idPessoa ? 'Editar' : 'Cadastrar'}} funcionário</h2>
+      <div class="campos"><label>Nome <input name="nome" [(ngModel)]="funcionarioForm.pessoa.nome" required maxlength="100"></label>
+        <label>CPF <input name="cpf" type="text" pattern="[0-9]{11}" [ngModel]="funcionarioForm.pessoa.cpf || ''" (ngModelChange)="funcionarioForm.pessoa.cpf=+$event" required></label>
+        <label>Nascimento <input name="nascimento" type="date" [(ngModel)]="funcionarioForm.pessoa.dataNascimento" required></label>
+        <label>Sexo <select name="sexo" [(ngModel)]="funcionarioForm.pessoa.sexo" required><option value="">Selecione</option><option value="F">Feminino</option><option value="M">Masculino</option><option value="O">Outro</option></select></label>
+        <label>E-mail <input name="email" type="email" [(ngModel)]="funcionarioForm.pessoa.email" required></label>
+        <label>Telefone <input name="telefone" type="text" pattern="[0-9]{10,11}" [ngModel]="funcionarioForm.pessoa.telefone || ''" (ngModelChange)="funcionarioForm.pessoa.telefone=+$event" required></label>
+        <label>Cargo <input name="cargo" [(ngModel)]="funcionarioForm.cargo" required maxlength="20"></label>
+        <label>Data de admissão <input name="admissao" type="date" [(ngModel)]="funcionarioForm.dataAdmissao" required></label></div>
+      <h2>Endereço</h2><div class="campos endereco" *ngFor="let e of funcionarioForm.pessoa.enderecos; let n=index">
+        <label>CEP <input [name]="'fcep'+n" [(ngModel)]="e.cep" pattern="[0-9]{8}" required></label>
+        <label>Número <input [name]="'fnumero'+n" [(ngModel)]="e.numero" required></label>
+        <label>Complemento <input [name]="'fcomplemento'+n" [(ngModel)]="e.complemento"></label>
+        <button type="button" class="botao-leve" *ngIf="funcionarioForm.pessoa.enderecos.length > 1" (click)="funcionarioForm.pessoa.enderecos.splice(n,1)">Remover</button></div>
+      <div class="acoes"><button type="button" class="botao-leve" (click)="funcionarioForm.pessoa.enderecos.push({idPessoa:0,cep:'',numero:'',complemento:''})">Adicionar endereço</button>
+        <button [disabled]="formFunc.invalid">Salvar funcionário</button><button type="button" class="botao-leve" (click)="funcionarioForm=novoFuncionario()">Limpar</button></div>
+      <small *ngIf="formFunc.invalid">Preencha os campos obrigatórios.</small></form>
+    <div class="consulta-id"><label>Consultar funcionário pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label><button (click)="consultarFuncionario()" [disabled]="!consultaId">Consultar</button></div>
+    <div class="linha" *ngFor="let f of funcionarios"><span><strong>#{{f.idPessoa}} {{f.pessoa.nome}}</strong><small>{{f.cargo}} · {{f.pessoa.ativoPessoa === 'S' ? 'Ativo' : 'Inativo'}}</small></span>
+      <button class="botao-leve" (click)="editarFuncionario(f)">Editar</button></div>
+  

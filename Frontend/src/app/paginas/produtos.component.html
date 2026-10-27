@@ -1,0 +1,16 @@
+﻿  <h1>Produtos</h1>
+    <form class="formulario" #formProduto="ngForm" (ngSubmit)="salvarProduto()"><h2>{{produtoForm.idItem ? 'Editar' : 'Cadastrar'}} produto</h2>
+      <div class="campos"><label>Categoria <select name="categoria" [(ngModel)]="produtoForm.idcategoria" required><option [ngValue]="0">Selecione</option><option *ngFor="let c of categorias" [ngValue]="c.idcategoria">{{c.categoria}}</option></select></label>
+        <label>Nome <input name="nome" [(ngModel)]="produtoForm.item" required maxlength="40"></label>
+        <label>Descrição <input name="descricao" [(ngModel)]="produtoForm.descricaoItem" required maxlength="200"></label>
+        <label>Preço de custo <input name="preco" type="number" min="0.01" step="0.01" [(ngModel)]="produtoForm.precoItem" required></label>
+        <label>Código de preço <select name="codigo" [(ngModel)]="produtoForm.codigoPreco" required><option [ngValue]="1">1 — 4%</option><option [ngValue]="2">2 — 8%</option><option [ngValue]="3">3 — 10%</option></select></label>
+        <label>Unidade <input name="unidade" [(ngModel)]="produtoForm.unidade" required maxlength="10"></label>
+        <label>Situação <select name="ativo" [(ngModel)]="produtoForm.ativoProdutoServico"><option value="S">Ativo</option><option value="N">Inativo</option></select></label></div>
+      <div class="acoes"><button [disabled]="formProduto.invalid || !produtoForm.idcategoria">Salvar produto</button>
+        <button type="button" class="botao-leve" (click)="produtoForm=novoProduto()">Limpar</button></div>
+      <small *ngIf="formProduto.invalid || !produtoForm.idcategoria">Confira categoria, nome, descrição e preço.</small></form>
+    <div class="consulta-id"><label>Consultar produto pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label><button (click)="consultarProduto()" [disabled]="!consultaId">Consultar</button></div>
+    <div class="linha" *ngFor="let p of produtos"><span><strong>#{{p.idItem}} {{p.item}}</strong><small>{{p.descricaoItem}} · {{p.ativoProdutoServico === 'S' ? 'Ativo' : 'Inativo'}}</small></span>
+      <strong>{{p.precoVenda | currency:'BRL'}}</strong><div class="acoes"><button class="botao-leve" (click)="editarProduto(p)">Editar</button><button class="botao-leve" (click)="desativarProduto(p.idItem)">Desativar</button></div></div>
+  

@@ -1,0 +1,9 @@
+﻿  <h1>Estoque</h1>
+    <div class="consulta-id"><label>Consultar produto pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label><button (click)="consultarEstoque()" [disabled]="!consultaId">Consultar</button></div>
+    <article class="detalhe" *ngIf="estoqueDetalhe"><h2>#{{estoqueDetalhe.idItem}} {{estoqueDetalhe.item}}</h2>
+      <p>{{estoqueDetalhe.descricaoItem}} · {{estoqueDetalhe.categoria}}</p>
+      <p>Custo {{estoqueDetalhe.preco | currency:'BRL'}} · Venda {{estoqueDetalhe.precoVenda | currency:'BRL'}} · {{estoqueDetalhe.quantidadeEstoque}} {{estoqueDetalhe.unidade}} disponíveis</p></article>
+    <p class="vazio" *ngIf="!estoques.length">Nenhum produto no estoque.</p>
+    <div class="linha" *ngFor="let e of estoques"><span><strong>#{{e.idItem}} {{e.item}}</strong><small>{{e.descricaoItem}} · {{e.categoria}} · {{e.ativoProdutoServico === 'S' ? 'Ativo' : 'Inativo'}}</small></span>
+      <span>Custo {{e.preco | currency:'BRL'}}<br>Venda {{e.precoVenda | currency:'BRL'}}</span><strong>{{e.quantidadeEstoque}} {{e.unidade}}</strong></div>
+  

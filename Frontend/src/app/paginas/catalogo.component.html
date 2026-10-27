@@ -1,0 +1,18 @@
+﻿    <section class="abertura"><div><h1>Seu cuidado, no seu tempo.</h1>
+      <p>Escolha um tratamento ou encontre produtos para continuar o cuidado em casa.</p></div>
+      <div class="marca-grafica" aria-hidden="true"><span></span><span></span><span></span></div></section>
+    <section class="filtros" aria-label="Buscar no catálogo">
+      <label>Pesquisar pelo nome <input [(ngModel)]="busca" (keyup.enter)="carregarCatalogo()" placeholder="Ex.: limpeza de pele"></label>
+      <label>Categoria <select [(ngModel)]="filtroCategoria" (change)="carregarCatalogo()"><option [ngValue]="0">Todas</option>
+        <option *ngFor="let c of categorias" [ngValue]="c.idcategoria">{{c.categoria}}</option></select></label>
+      <label>Tipo <select [(ngModel)]="filtroTipo" (change)="carregarCatalogo()"><option value="">Todos</option>
+        <option value="P">Produtos</option><option value="S">Serviços</option></select></label>
+      <button type="button" (click)="carregarCatalogo()">Buscar</button>
+    </section>
+    <div class="consulta-id"><label>Consultar item pelo ID <input type="number" min="1" [(ngModel)]="consultaId"></label>
+      <button type="button" class="botao-leve" (click)="consultarCatalogo(consultaId)" [disabled]="!consultaId">Consultar</button></div>
+    <article class="detalhe" *ngIf="itemDetalhe"><h2>{{itemDetalhe.item}}</h2><p>{{itemDetalhe.descricaoItem}}</p>
+      <p>{{itemDetalhe.categoria}} · {{itemDetalhe.tipoItem === 'P' ? 'Produto' : 'Serviço'}} · {{itemDetalhe.preco | currency:'BRL'}}</p>
+      <button type="button" (click)="adicionar(itemDetalhe)">Adicionar ao carrinho</button></article>
+    <p class="vazio" *ngIf="!itens.length && !carregando">Nenhum item encontrado. Tente outro filtro.</p>
+    <div class="grade-itens"><app-item-card *ngFor="let item of itens" [item]="item" (adicionar)="adicionar($event)"></app-item-card></div>
