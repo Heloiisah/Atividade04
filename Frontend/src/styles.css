@@ -1,13 +1,13 @@
 :root {
-  --verde: #213f36;
-  --verde-hover: #31584b;
-  --verde-claro: #e0e5dd;
-  --verde-suave: #eff3ed;
-  --fundo: #f7f8f5;
+  --roxo: #532b6d;
+  --roxo-hover: #6c4188;
+  --lilas: #e8dcf2;
+  --lilas-suave: #f4eef9;
+  --fundo: #fcf9fe;
   --branco: #fff;
-  --texto: #263d34;
-  --texto-suave: #637269;
-  --borda: #cdd6cc;
+  --texto: #3c2b49;
+  --texto-suave: #6b5879;
+  --borda: #d8c9e3;
   --vermelho: #b63832;
   font-family: 'Segoe UI', Arial, sans-serif;
   color: var(--texto);
@@ -32,16 +32,16 @@ button {
   gap: 8px;
   min-height: 42px;
   padding: 10px 18px;
-  border: 1px solid var(--verde);
+  border: 1px solid var(--roxo);
   border-radius: 4px;
-  background: var(--verde);
+  background: var(--roxo);
   color: var(--branco);
   font-weight: 600;
   cursor: pointer;
 }
 button:hover {
-  background: var(--verde-hover);
-  border-color: var(--verde-hover);
+  background: var(--roxo-hover);
+  border-color: var(--roxo-hover);
 }
 button:disabled {
   opacity: 0.5;
@@ -52,8 +52,12 @@ a:focus-visible,
 summary:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 3px solid #a78a44;
+  outline: 3px solid #8854ad;
   outline-offset: 3px;
+}
+.site-header button:focus-visible,
+.site-footer button:focus-visible {
+  outline-color: #ead5fa;
 }
 app-icone {
   display: inline-flex;
@@ -68,18 +72,18 @@ app-icone svg {
 }
 .botao-leve {
   background: var(--branco);
-  color: var(--verde);
+  color: var(--roxo);
   border-color: var(--borda);
 }
 .botao-leve:hover {
-  background: var(--verde-suave);
-  color: var(--verde);
+  background: var(--lilas-suave);
+  color: var(--roxo);
 }
 .botao-texto,
 .botao-perigo-leve {
   min-height: 38px;
   padding: 6px 0;
-  color: var(--verde);
+  color: var(--roxo);
   background: transparent;
   border-color: transparent;
 }
@@ -109,7 +113,7 @@ app-icone svg {
   z-index: 10;
   padding: 12px;
   background: var(--branco);
-  color: var(--verde);
+  color: var(--roxo);
 }
 .pular-conteudo:focus {
   top: 12px;
@@ -126,7 +130,7 @@ app-icone svg {
 /* Cabeçalho e rodapé, como nas referências da loja. */
 .site-header {
   color: var(--branco);
-  background: var(--verde);
+  background: var(--roxo);
 }
 .header-inner {
   display: flex;
@@ -152,13 +156,13 @@ app-icone svg {
 .brand app-icone {
   width: 30px;
   height: 30px;
-  color: #c9d6bd;
+  color: #dfc7ed;
 }
 .brand:hover {
   background: transparent;
 }
 .brand-e {
-  color: #c9d6bd;
+  color: #dfc7ed;
 }
 .loja-nav {
   display: flex;
@@ -177,11 +181,11 @@ app-icone svg {
 }
 .loja-nav button[aria-current='page'] {
   background: #ffffff1c;
-  border-color: #8da394;
+  border-color: #b697cb;
 }
 .loja-nav .nav-admin {
   margin-left: 10px;
-  border-left-color: #6d8479;
+  border-left-color: #9476a8;
   border-radius: 0;
   padding-left: 20px;
 }
@@ -191,8 +195,8 @@ app-icone svg {
   min-width: 22px;
   height: 22px;
   padding: 0 5px;
-  background: var(--verde-claro);
-  color: var(--verde);
+  background: var(--lilas);
+  color: var(--roxo);
   border-radius: 50%;
   font-size: 0.75rem;
 }
@@ -210,7 +214,7 @@ app-icone svg {
   outline: none;
 }
 .site-footer {
-  background: var(--verde);
+  background: var(--roxo);
   color: var(--branco);
 }
 .footer-inner {
@@ -228,7 +232,7 @@ app-icone svg {
     serif;
 }
 .footer-inner p {
-  color: #d0dbd0;
+  color: #eadcf3;
   font-size: 0.875rem;
   margin: 8px 0 0;
 }
@@ -250,7 +254,7 @@ app-icone svg {
   grid-column: 1 / -1;
   padding-top: 20px;
   border-top: 1px solid #ffffff26;
-  color: #c9d6cb;
+  color: #e0cde9;
   font-size: 0.75rem;
   text-align: center;
 }
@@ -258,7 +262,7 @@ app-icone svg {
 h1,
 h2,
 h3 {
-  color: var(--verde);
+  color: var(--roxo);
   line-height: 1.25;
 }
 h1 {
@@ -285,7 +289,7 @@ p {
 .titulo-pagina {
   padding: 28px 30px;
   margin: 0 0 26px;
-  background: var(--verde-claro);
+  background: var(--lilas);
   border-radius: 4px;
 }
 .titulo-pagina h1 {
@@ -293,7 +297,7 @@ p {
 }
 .titulo-pagina p {
   margin: 0;
-  color: #4d6054;
+  color: #645271;
   font-size: 0.925rem;
 }
 
@@ -304,14 +308,14 @@ p {
   overflow-x: auto;
   margin: -8px 0 24px;
   padding: 10px;
-  background: var(--verde-claro);
+  background: var(--lilas);
   scrollbar-width: thin;
-  scrollbar-color: #8da394 transparent;
+  scrollbar-color: #b697cb transparent;
 }
 .categorias-nav button {
   flex-shrink: 0;
   background: transparent;
-  color: var(--verde);
+  color: var(--roxo);
   border-color: transparent;
   min-height: 36px;
   padding: 8px 14px;
@@ -321,12 +325,12 @@ p {
   background: #ffffff80;
 }
 .categorias-nav button.selecionado {
-  background: var(--verde);
+  background: var(--roxo);
   color: var(--branco);
 }
 .catalogo-busca {
   padding: 26px 30px 28px;
-  background: var(--verde);
+  background: var(--roxo);
   color: var(--branco);
   border-radius: 4px;
 }
@@ -343,12 +347,12 @@ p {
 }
 .catalogo-apresentacao p {
   margin: 0;
-  color: #d2dfd3;
+  color: #eadcf3;
 }
 .catalogo-apresentacao > app-icone {
   width: 50px;
   height: 50px;
-  color: #b6c8b6;
+  color: #d9bde9;
 }
 .busca-catalogo {
   display: flex;
@@ -357,7 +361,7 @@ p {
   margin-top: 22px;
 }
 .busca-catalogo label {
-  color: #e4ebe3;
+  color: #f0e4f7;
   flex: 0 1 235px;
   min-width: 0;
   font-size: 0.8rem;
@@ -366,9 +370,9 @@ p {
   flex: 1;
 }
 .busca-catalogo button {
-  background: var(--verde-claro);
-  border-color: var(--verde-claro);
-  color: var(--verde);
+  background: var(--lilas);
+  border-color: var(--lilas);
+  color: var(--roxo);
   height: 44px;
   padding-inline: 24px;
 }
@@ -406,7 +410,7 @@ p {
   background: var(--branco);
   border: 1px solid var(--borda);
   border-radius: 4px;
-  box-shadow: 0 8px 20px #213f3614;
+  box-shadow: 0 8px 20px #532b6d14;
 }
 .consulta-rapida .consulta-id label {
   min-width: 100px;
@@ -416,7 +420,7 @@ p {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   padding: 20px;
-  background: var(--verde-claro);
+  background: var(--lilas);
 }
 .grade-itens:empty {
   display: none;
@@ -430,7 +434,7 @@ p {
   flex-direction: column;
   height: 100%;
   background: var(--branco);
-  border: 1px solid #d0d8cf;
+  border: 1px solid #dccce7;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -439,7 +443,7 @@ p {
   overflow: hidden;
   margin: 8px 8px 0;
   border-radius: 3px;
-  background: #d3d9cf;
+  background: #e2d5eb;
 }
 .item-imagem img {
   display: block;
@@ -457,7 +461,7 @@ p {
   padding: 5px 10px;
   border-radius: 3px;
   background: #ffffffed;
-  color: var(--verde);
+  color: var(--roxo);
   font-size: 0.7rem;
   font-weight: 600;
 }
@@ -509,14 +513,14 @@ p {
   min-height: 34px;
   margin-top: 5px;
   padding: 6px;
-  color: var(--verde);
+  color: var(--roxo);
   background: transparent;
   border-color: transparent;
   font-size: 0.75rem;
 }
 .item-conteudo .ver-detalhes:hover {
   text-decoration: underline;
-  background: var(--verde-suave);
+  background: var(--lilas-suave);
 }
 .nota-catalogo {
   margin: 14px 0 0;
@@ -528,7 +532,7 @@ p {
   padding-right: 60px;
 }
 .detalhe-item:focus-visible {
-  outline: 3px solid #a78a44;
+  outline: 3px solid #8854ad;
   outline-offset: 3px;
 }
 .fechar-detalhe {
@@ -556,7 +560,7 @@ p {
 .filtros {
   padding: 18px;
   margin: 18px 0;
-  background: var(--verde-claro);
+  background: var(--lilas);
   border-radius: 4px;
 }
 .consulta-id {
@@ -580,7 +584,7 @@ select {
   min-width: 0;
   height: 44px;
   padding: 10px 12px;
-  border: 1px solid #aebaad;
+  border: 1px solid #baa5c9;
   border-radius: 3px;
   color: var(--texto);
   background: var(--branco);
@@ -588,7 +592,7 @@ select {
   font-weight: 400;
 }
 input::placeholder {
-  color: #738075;
+  color: #806e8f;
   opacity: 1;
 }
 input.ng-invalid.ng-touched,
@@ -602,7 +606,7 @@ select.ng-invalid.ng-touched {
   padding: 26px;
   margin: 22px 0;
   border: 1px solid var(--borda);
-  background: var(--verde-claro);
+  background: var(--lilas);
   border-radius: 4px;
 }
 .formulario h2 {
@@ -621,7 +625,7 @@ select.ng-invalid.ng-touched {
 .formulario > small,
 .ajuda-formulario {
   margin: 0;
-  color: #56675b;
+  color: #685778;
   font-size: 0.8rem;
   line-height: 1.6;
 }
@@ -635,12 +639,12 @@ select.ng-invalid.ng-touched {
   gap: 12px;
   justify-content: space-between;
   padding-top: 18px;
-  border-top: 1px solid #bdc9bb;
+  border-top: 1px solid #cfc0db;
 }
 .endereco {
   padding: 18px;
   background: #ffffff73;
-  border: 1px solid #c3cebf;
+  border: 1px solid #d6c7e1;
   border-radius: 3px;
 }
 .pagina-cadastro {
@@ -666,7 +670,7 @@ select.ng-invalid.ng-touched {
 }
 .acoes-formulario {
   padding-top: 20px;
-  border-top: 1px solid #bdc9bb;
+  border-top: 1px solid #cfc0db;
 }
 .acoes-formulario button {
   flex: 1;
@@ -692,7 +696,7 @@ select.ng-invalid.ng-touched {
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
-  background: var(--verde-claro);
+  background: var(--lilas);
   border-radius: 4px 4px 0 0;
 }
 .lista-titulo h2 {
@@ -768,7 +772,7 @@ select.ng-invalid.ng-touched {
   border: 1px solid var(--borda);
   border-radius: 6px;
   background: var(--branco);
-  box-shadow: 0 3px 9px #213f3608;
+  box-shadow: 0 3px 9px #532b6d08;
 }
 .resumo-compra h2 {
   margin: 0 0 24px;
@@ -829,7 +833,7 @@ select.ng-invalid.ng-touched {
   align-self: start;
   margin: 32px 0 32px 24px;
   padding: 8px;
-  background: var(--verde-claro);
+  background: var(--lilas);
   border-radius: 5px;
 }
 .sidebar-titulo {
@@ -851,15 +855,15 @@ select.ng-invalid.ng-touched {
   padding: 14px 10px;
   border: 1px solid transparent;
   background: var(--branco);
-  color: var(--verde);
+  color: var(--roxo);
   text-align: left;
 }
 .admin-sidebar nav button:hover {
-  background: var(--verde-suave);
+  background: var(--lilas-suave);
 }
 .admin-sidebar nav button[aria-current='page'] {
-  border-color: var(--verde);
-  background: var(--verde);
+  border-color: var(--roxo);
+  background: var(--roxo);
   color: var(--branco);
 }
 .admin-sidebar nav strong {
@@ -876,7 +880,7 @@ select.ng-invalid.ng-touched {
   line-height: 1.4;
 }
 .admin-sidebar nav button[aria-current='page'] small {
-  color: #d3dfd3;
+  color: #e8d8f2;
 }
 .admin-sidebar .voltar-loja {
   width: 100%;
@@ -897,7 +901,7 @@ select.ng-invalid.ng-touched {
   padding: 20px;
   background: var(--branco);
   border: 1px solid var(--borda);
-  border-top: 3px solid #7b9677;
+  border-top: 3px solid #a279bd;
   border-radius: 4px;
 }
 .indicadores span {
@@ -908,7 +912,7 @@ select.ng-invalid.ng-touched {
   font:
     600 2.3rem Georgia,
     serif;
-  color: var(--verde);
+  color: var(--roxo);
 }
 .indicadores small {
   color: var(--texto-suave);
@@ -954,9 +958,9 @@ select.ng-invalid.ng-touched {
 .detalhe {
   margin: 22px 0;
   padding: 24px;
-  background: var(--verde-suave);
+  background: var(--lilas-suave);
   border: 1px solid var(--borda);
-  border-left: 4px solid var(--verde);
+  border-left: 4px solid var(--roxo);
   border-radius: 3px;
 }
 .detalhe h2 {
@@ -983,15 +987,15 @@ table {
 }
 th {
   padding: 14px 16px;
-  color: var(--verde);
-  background: var(--verde-suave);
+  color: var(--roxo);
+  background: var(--lilas-suave);
   border-bottom: 1px solid var(--borda);
   font-weight: 600;
   white-space: nowrap;
 }
 td {
   padding: 16px;
-  border-bottom: 1px solid #e6ebe2;
+  border-bottom: 1px solid #eee5f3;
   vertical-align: middle;
   line-height: 1.5;
 }
@@ -999,7 +1003,7 @@ tr:last-child td {
   border-bottom: 0;
 }
 tbody tr:hover {
-  background: #f8faf6;
+  background: #faf6fd;
 }
 .numero {
   text-align: right;
@@ -1017,8 +1021,8 @@ tbody tr:hover {
   display: inline-block;
   padding: 4px 9px;
   border-radius: 4px;
-  background: #e6eee0;
-  color: #37552f;
+  background: #eee0f6;
+  color: #60347c;
   white-space: nowrap;
   font-size: 0.7rem;
   font-weight: 600;
@@ -1043,10 +1047,10 @@ tbody tr:hover {
   gap: 16px;
   padding: 12px 16px;
   margin-bottom: 22px;
-  border: 1px solid #b9ccb1;
-  border-left: 4px solid #5e8050;
+  border: 1px solid #cfb9e0;
+  border-left: 4px solid #8754a9;
   border-radius: 3px;
-  background: #eaf1e5;
+  background: #f2e8fa;
   font-size: 0.9rem;
 }
 .alerta-erro {
@@ -1063,11 +1067,11 @@ tbody tr:hover {
   color: inherit;
 }
 .fechar-alerta:hover {
-  background: #213f360a;
+  background: #532b6d0a;
 }
 .vazio {
   padding: 48px 24px;
-  background: var(--verde-suave);
+  background: var(--lilas-suave);
   border: 1px dashed var(--borda);
   text-align: center;
   color: var(--texto-suave);
@@ -1075,7 +1079,7 @@ tbody tr:hover {
 .vazio > app-icone {
   width: 40px;
   height: 40px;
-  color: #718b6a;
+  color: #9c7caf;
 }
 .vazio h2 {
   margin: 16px 0 8px;
