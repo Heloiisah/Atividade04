@@ -1,34 +1,19 @@
-# Angular / Node.js: dependencias, compilacao e cache
+# Dependencias, compilacao e cache
 node_modules/
 .angular/
 dist/
 out-tsc/
 coverage/
 .npm/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# .NET / Visual Studio: compilacao e arquivos locais
-[Bb]in/
-[Oo]bj/
-.vs/
-[Tt]est[Rr]esults/
-*.user
-*.suo
-*.sln.docstates
-*.userosscache
-
-# Configuracoes locais e credenciais
+# Configuracoes locais
 .env
 .env.*
 !.env.example
 !.env.*.example
-appsettings.Local.json
-appsettings.*.Local.json
-
-# Editor, logs e arquivos temporarios do sistema
 .idea/
+
+# Logs e arquivos temporarios
 *.log
 *.tmp
 *.swp
@@ -38,5 +23,5 @@ appsettings.*.Local.json
 Thumbs.db
 Desktop.ini
 
-# Enunciado da atividade mantido apenas localmente
+# PDF da atividade
 /ROTEIRO_DA_ATIVIDADE.pdf
