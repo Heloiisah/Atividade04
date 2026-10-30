@@ -25,3 +25,6 @@ Desktop.ini
 
 # PDF da atividade
 /ROTEIRO_DA_ATIVIDADE.pdf
+
+# Backend mantido em um repositorio separado
+/Backend/

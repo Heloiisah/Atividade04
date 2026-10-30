@@ -1,4 +1,4 @@
-# Estética & Bem-Estar
+# Estetica-front
 
 Frontend em Angular para catálogo, carrinho, cadastro de clientes e administração da loja.
 
@@ -14,6 +14,8 @@ npm start
 Abra http://localhost:4200.
 
 ## API
+
+Backend: https://github.com/Heloiisah/Estetica-back
 
 As telas usam uma API externa. O arquivo `proxy.conf.json` encaminha as chamadas `/api` para `http://localhost:5126`.
 
